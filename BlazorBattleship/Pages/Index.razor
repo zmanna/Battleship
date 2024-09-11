@@ -1,0 +1,138 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.SignalR.Client
+@inject NavigationManager Navigation
+@implements IAsyncDisposable
+
+<PageTitle>Battleship</PageTitle>
+
+@if ((IsSetup == false && IsGameStart == false) || userInput == "")
+{
+    <div class="form-group">
+        <label>
+            Enter your name:
+            <input @bind="userInput" />
+        </label>
+        <button class="play-buton" @onclick="(() => {IsSetup = true;})">Play</button>
+    </div>
+}
+
+@if (userInput!="" && IsSetup == true)
+{
+    <div class="user-board">
+        <h3>Set Up Board</h3>
+        @for (int i = 0; i < 10; i++)
+        {
+            <div class="row">
+                @for (int j = 0; j < 10; j++)
+                {
+                    int i_temp = i;
+                    int j_temp = j;
+                    <button class="square" @onclick='(() => {i_Input = i_temp; j_Input = j_temp;})'></button>
+                }
+            </div>
+        }
+        <button class="square" @onclick="(() => {IsSetup = false;; IsGameStart=true;})">Play</button>
+    </div>
+}
+
+@if (IsSetup == false && IsGameStart == true)
+{
+    <div class="player-boards">
+        <div class="user-board">
+            <h3>Board</h3>
+            @for (int i=0; i<10; i++)
+            {
+                <div class="row">
+                    @for (int j=0; j<10; j++)
+                    {
+                        int i_temp = i;
+                        int j_temp = j;
+                        <button class="square" @onclick='(() => {i_Input = i_temp; j_Input = j_temp;})'></button>
+                    }
+                </div>
+            }
+        </div>
+
+        <button @onclick="Fire" disabled="@(IsConnected == false || IsTurn == false)">Fire</button>
+
+        <ul id="messagesList">
+        @foreach (var move in moves)
+        {
+                <li>@move</li>
+        }
+        </ul>
+    </div>
+}
+
+
+@code {
+    private HubConnection? hubConnection;
+    private List<string> moves = new List<string>();
+    private string? userInput = "";
+    private int? i_Input;
+    private int? j_Input;
+
+    private bool IsTurn = true;
+    private bool IsSetup = false;
+    private bool IsGameStart = false;
+
+    <!-- game variables -->
+    private int ShipNumber = 0;
+    //private int 
+
+
+    //  runs when client connects
+    protected override async Task OnInitializedAsync()
+    {
+        // create a new connection to the hub
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(Navigation.ToAbsoluteUri("/chathub"))
+            .WithAutomaticReconnect()
+            .Build();
+
+        // when a user and message are received from the connection...
+        hubConnection.On<string, int, int>("ReceiveCoordinates", (user, i, j) =>
+        {
+            //
+            var formattedMessage = $"{user} fires at {i}, {j}";
+            moves.Add(formattedMessage);
+            InvokeAsync(StateHasChanged);
+            //IsTurn = true;
+        });
+
+        hubConnection.On<string, string, bool>("ReceiveFireInformation", (user, coordinates, wasHit) =>
+        {
+            if (wasHit)
+            {
+                var formattedMessage = $"{user} hit a ship at {coordinates}";
+                moves.Add(formattedMessage);
+                InvokeAsync(StateHasChanged);
+            }
+            else
+            {
+                var formattedMessage = $"{user} missed at {coordinates}";
+            }
+        });
+
+        await hubConnection.StartAsync();
+    }
+
+    private async Task Fire()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.SendAsync("SendCoordinates", userInput, i_Input, j_Input);
+            //IsTurn = false;
+        }
+    }
+
+    public bool IsConnected => hubConnection?.State == HubConnectionState.Connected;
+
+    public async ValueTask DisposeAsync()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.DisposeAsync();
+        }
+    }
+}
