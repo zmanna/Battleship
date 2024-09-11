@@ -1,3 +1,7 @@
-This is Aryamann Zutshi Group Project Repository for Battleships
+Aryamann Zutshi
+John Mosely
+Paul Dykes
+Will Battey
+Spencer Addis
 
 Overall documentation of thought process through development can be located in 'documentation.txt'
