@@ -1,0 +1,155 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\johnm\\source\\repos\\BlazorBattleship\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{9CCB6F9A-D431-462D-B3EF-EDABA96ACDB3}|BlazorBattleship\\BlazorBattleship.csproj|c:\\users\\johnm\\source\\repos\\blazorbattleship\\blazorbattleship\\hubs\\chathub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9CCB6F9A-D431-462D-B3EF-EDABA96ACDB3}|BlazorBattleship\\BlazorBattleship.csproj|solutionrelative:blazorbattleship\\hubs\\chathub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9CCB6F9A-D431-462D-B3EF-EDABA96ACDB3}|BlazorBattleship\\BlazorBattleship.csproj|c:\\users\\johnm\\source\\repos\\blazorbattleship\\blazorbattleship\\pages\\index.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{9CCB6F9A-D431-462D-B3EF-EDABA96ACDB3}|BlazorBattleship\\BlazorBattleship.csproj|solutionrelative:blazorbattleship\\pages\\index.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9CCB6F9A-D431-462D-B3EF-EDABA96ACDB3}|BlazorBattleship\\BlazorBattleship.csproj|c:\\users\\johnm\\source\\repos\\blazorbattleship\\blazorbattleship\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9CCB6F9A-D431-462D-B3EF-EDABA96ACDB3}|BlazorBattleship\\BlazorBattleship.csproj|solutionrelative:blazorbattleship\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9CCB6F9A-D431-462D-B3EF-EDABA96ACDB3}|BlazorBattleship\\BlazorBattleship.csproj|c:\\users\\johnm\\source\\repos\\blazorbattleship\\blazorbattleship\\gameclasslib\\game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9CCB6F9A-D431-462D-B3EF-EDABA96ACDB3}|BlazorBattleship\\BlazorBattleship.csproj|solutionrelative:blazorbattleship\\gameclasslib\\game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9CCB6F9A-D431-462D-B3EF-EDABA96ACDB3}|BlazorBattleship\\BlazorBattleship.csproj|c:\\users\\johnm\\source\\repos\\blazorbattleship\\blazorbattleship\\gameclasslib\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9CCB6F9A-D431-462D-B3EF-EDABA96ACDB3}|BlazorBattleship\\BlazorBattleship.csproj|solutionrelative:blazorbattleship\\gameclasslib\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9CCB6F9A-D431-462D-B3EF-EDABA96ACDB3}|BlazorBattleship\\BlazorBattleship.csproj|c:\\users\\johnm\\source\\repos\\blazorbattleship\\blazorbattleship\\pages\\battleship.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{9CCB6F9A-D431-462D-B3EF-EDABA96ACDB3}|BlazorBattleship\\BlazorBattleship.csproj|solutionrelative:blazorbattleship\\pages\\battleship.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9CCB6F9A-D431-462D-B3EF-EDABA96ACDB3}|BlazorBattleship\\BlazorBattleship.csproj|c:\\users\\johnm\\source\\repos\\blazorbattleship\\blazorbattleship\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{9CCB6F9A-D431-462D-B3EF-EDABA96ACDB3}|BlazorBattleship\\BlazorBattleship.csproj|solutionrelative:blazorbattleship\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9CCB6F9A-D431-462D-B3EF-EDABA96ACDB3}|BlazorBattleship\\BlazorBattleship.csproj|c:\\users\\johnm\\source\\repos\\blazorbattleship\\blazorbattleship\\blazorbattleship.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{9CCB6F9A-D431-462D-B3EF-EDABA96ACDB3}|BlazorBattleship\\BlazorBattleship.csproj|solutionrelative:blazorbattleship\\blazorbattleship.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 5,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Player.cs",
+              "DocumentMoniker": "C:\\Users\\johnm\\source\\repos\\BlazorBattleship\\BlazorBattleship\\GameClassLib\\Player.cs",
+              "RelativeDocumentMoniker": "BlazorBattleship\\GameClassLib\\Player.cs",
+              "ToolTip": "C:\\Users\\johnm\\source\\repos\\BlazorBattleship\\BlazorBattleship\\GameClassLib\\Player.cs",
+              "RelativeToolTip": "BlazorBattleship\\GameClassLib\\Player.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAGAAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-11T00:02:35.515Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Game.cs",
+              "DocumentMoniker": "C:\\Users\\johnm\\source\\repos\\BlazorBattleship\\BlazorBattleship\\GameClassLib\\Game.cs",
+              "RelativeDocumentMoniker": "BlazorBattleship\\GameClassLib\\Game.cs",
+              "ToolTip": "C:\\Users\\johnm\\source\\repos\\BlazorBattleship\\BlazorBattleship\\GameClassLib\\Game.cs",
+              "RelativeToolTip": "BlazorBattleship\\GameClassLib\\Game.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-11T00:02:24.814Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "site.css",
+              "DocumentMoniker": "C:\\Users\\johnm\\source\\repos\\BlazorBattleship\\BlazorBattleship\\wwwroot\\css\\site.css",
+              "RelativeDocumentMoniker": "BlazorBattleship\\wwwroot\\css\\site.css",
+              "ToolTip": "C:\\Users\\johnm\\source\\repos\\BlazorBattleship\\BlazorBattleship\\wwwroot\\css\\site.css",
+              "RelativeToolTip": "BlazorBattleship\\wwwroot\\css\\site.css",
+              "ViewState": "AgIAADYAAAAAAAAAAAAAAEMAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2024-09-10T09:34:12.909Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Index.razor",
+              "DocumentMoniker": "C:\\Users\\johnm\\source\\repos\\BlazorBattleship\\BlazorBattleship\\Pages\\Index.razor",
+              "RelativeDocumentMoniker": "BlazorBattleship\\Pages\\Index.razor",
+              "ToolTip": "C:\\Users\\johnm\\source\\repos\\BlazorBattleship\\BlazorBattleship\\Pages\\Index.razor",
+              "RelativeToolTip": "BlazorBattleship\\Pages\\Index.razor",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAACEAAABUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-09-10T08:27:00.966Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\johnm\\source\\repos\\BlazorBattleship\\BlazorBattleship\\Program.cs",
+              "RelativeDocumentMoniker": "BlazorBattleship\\Program.cs",
+              "ToolTip": "C:\\Users\\johnm\\source\\repos\\BlazorBattleship\\BlazorBattleship\\Program.cs",
+              "RelativeToolTip": "BlazorBattleship\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-10T08:23:24.813Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ChatHub.cs",
+              "DocumentMoniker": "C:\\Users\\johnm\\source\\repos\\BlazorBattleship\\BlazorBattleship\\Hubs\\ChatHub.cs",
+              "RelativeDocumentMoniker": "BlazorBattleship\\Hubs\\ChatHub.cs",
+              "ToolTip": "C:\\Users\\johnm\\source\\repos\\BlazorBattleship\\BlazorBattleship\\Hubs\\ChatHub.cs",
+              "RelativeToolTip": "BlazorBattleship\\Hubs\\ChatHub.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-10T08:19:59.601Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Battleship.razor",
+              "DocumentMoniker": "C:\\Users\\johnm\\source\\repos\\BlazorBattleship\\BlazorBattleship\\Pages\\Battleship.razor",
+              "RelativeDocumentMoniker": "BlazorBattleship\\Pages\\Battleship.razor",
+              "ToolTip": "C:\\Users\\johnm\\source\\repos\\BlazorBattleship\\BlazorBattleship\\Pages\\Battleship.razor",
+              "RelativeToolTip": "BlazorBattleship\\Pages\\Battleship.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAGYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-09-10T09:54:32.904Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "BlazorBattleship.csproj",
+              "DocumentMoniker": "C:\\Users\\johnm\\source\\repos\\BlazorBattleship\\BlazorBattleship\\BlazorBattleship.csproj",
+              "RelativeDocumentMoniker": "BlazorBattleship\\BlazorBattleship.csproj",
+              "ToolTip": "C:\\Users\\johnm\\source\\repos\\BlazorBattleship\\BlazorBattleship\\BlazorBattleship.csproj",
+              "RelativeToolTip": "BlazorBattleship\\BlazorBattleship.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2024-09-10T10:28:53.784Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

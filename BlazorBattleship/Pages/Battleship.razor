@@ -1,0 +1,102 @@
+﻿@page "/battleship"
+@using Microsoft.AspNetCore.SignalR.Client
+@inject NavigationManager Navigation
+@implements IAsyncDisposable
+
+<PageTitle>Chat</PageTitle>
+
+<div class="form-group">
+    <label>
+        User:
+        <input @bind="userInput" />
+    </label>
+</div>
+<div class="board">
+    @for (int i = 0; i < 10; i++)
+    {
+        <div class="row">
+            @for (int j = 0; j < 10; j++)
+            {
+                <button @onclick="setCoordinates"></button>
+            }
+        </div>
+    }
+</div>
+<button @onclick="Fire" disabled="@(IsConnected == false || IsTurn == false)">Fire</button>
+
+<hr />
+
+<ul id="messagesList">
+    @foreach (var move in moves)
+    {
+        <li>@move</li>
+    }
+</ul>
+
+@code {
+    private HubConnection? hubConnection;
+    private List<string> moves = new List<string>();
+    private string? userInput;
+    private string? coordinateInput;
+    public bool IsTurn = true;
+
+    public void setCoordinates()
+    {
+        coordinateInput = "A3";
+    }
+
+    //  runs when client connects
+    protected override async Task OnInitializedAsync()
+    {
+        // create a new connection to the hub
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(Navigation.ToAbsoluteUri("/chathub"))
+            .WithAutomaticReconnect()
+            .Build();
+
+        // when a user and message are received from the connection...
+        hubConnection.On<string, string>("ReceiveCoordinates", (user, coordinates) =>
+        {
+            //
+            var formattedMessage = $"{user} fires at {coordinates}";
+            moves.Add(formattedMessage);
+            InvokeAsync(StateHasChanged);
+            //IsTurn = true;
+        });
+
+        hubConnection.On<string, string, bool>("ReceiveFireInformation", (user, coordinates, wasHit) =>
+        {
+            if (wasHit)
+            {
+                var formattedMessage = $"{user} hit a ship at {coordinates}";
+                moves.Add(formattedMessage);
+                InvokeAsync(StateHasChanged);
+            }
+            else
+            {
+                var formattedMessage = $"{user} missed at {coordinates}";
+            }
+        });
+
+        await hubConnection.StartAsync();
+    }
+
+    private async Task Fire()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.SendAsync("SendCoordinates", userInput, coordinateInput);
+            //IsTurn = false;
+        }
+    }
+
+    public bool IsConnected => hubConnection?.State == HubConnectionState.Connected;
+
+    public async ValueTask DisposeAsync()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.DisposeAsync();
+        }
+    }
+}
