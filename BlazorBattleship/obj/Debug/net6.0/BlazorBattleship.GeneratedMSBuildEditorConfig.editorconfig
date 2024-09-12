@@ -5,56 +5,61 @@ build_property.UsingMicrosoftNETSdkWeb = true
 build_property.ProjectTypeGuids = 
 build_property.InvariantGlobalization = 
 build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = BlazorBattleship
 build_property.RootNamespace = BlazorBattleship
-build_property.ProjectDir = C:\Users\moldy\OneDrive\Desktop\Github\Battleship\BlazorBattleship\
+build_property.ProjectDir = /Users/spenceraddis/Desktop/EECS 581/Battleship_p1/BlazorBattleship/
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 6.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\moldy\OneDrive\Desktop\Github\Battleship\BlazorBattleship
+build_property.MSBuildProjectDirectory = /Users/spenceraddis/Desktop/EECS 581/Battleship_p1/BlazorBattleship
 build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 6.0
+build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/moldy/OneDrive/Desktop/Github/Battleship/BlazorBattleship/App.razor]
+[/Users/spenceraddis/Desktop/EECS 581/Battleship_p1/BlazorBattleship/App.razor]
 build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/moldy/OneDrive/Desktop/Github/Battleship/BlazorBattleship/Pages/Counter.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ291bnRlci5yYXpvcg==
+[/Users/spenceraddis/Desktop/EECS 581/Battleship_p1/BlazorBattleship/Pages/Counter.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQ291bnRlci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/moldy/OneDrive/Desktop/Github/Battleship/BlazorBattleship/Pages/FetchData.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRmV0Y2hEYXRhLnJhem9y
+[/Users/spenceraddis/Desktop/EECS 581/Battleship_p1/BlazorBattleship/Pages/FetchData.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvRmV0Y2hEYXRhLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/moldy/OneDrive/Desktop/Github/Battleship/BlazorBattleship/Pages/Index.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXgucmF6b3I=
+[/Users/spenceraddis/Desktop/EECS 581/Battleship_p1/BlazorBattleship/Pages/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvSW5kZXgucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/moldy/OneDrive/Desktop/Github/Battleship/BlazorBattleship/Shared/SurveyPrompt.razor]
-build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFN1cnZleVByb21wdC5yYXpvcg==
+[/Users/spenceraddis/Desktop/EECS 581/Battleship_p1/BlazorBattleship/Shared/SurveyPrompt.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkL1N1cnZleVByb21wdC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/moldy/OneDrive/Desktop/Github/Battleship/BlazorBattleship/_Imports.razor]
+[/Users/spenceraddis/Desktop/EECS 581/Battleship_p1/BlazorBattleship/_Imports.razor]
 build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/moldy/OneDrive/Desktop/Github/Battleship/BlazorBattleship/Shared/MainLayout.razor]
-build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE1haW5MYXlvdXQucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = b-9ww2v6d7oi
+[/Users/spenceraddis/Desktop/EECS 581/Battleship_p1/BlazorBattleship/Shared/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkL01haW5MYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-exeg9x7lx8
 
-[C:/Users/moldy/OneDrive/Desktop/Github/Battleship/BlazorBattleship/Shared/NavMenu.razor]
-build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE5hdk1lbnUucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = b-yb6yrr4pif
+[/Users/spenceraddis/Desktop/EECS 581/Battleship_p1/BlazorBattleship/Shared/NavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkL05hdk1lbnUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-u9kta7g3h9
 
-[C:/Users/moldy/OneDrive/Desktop/Github/Battleship/BlazorBattleship/Pages/Error.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXJyb3IuY3NodG1s
+[/Users/spenceraddis/Desktop/EECS 581/Battleship_p1/BlazorBattleship/Pages/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvRXJyb3IuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/moldy/OneDrive/Desktop/Github/Battleship/BlazorBattleship/Pages/_Host.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX0hvc3QuY3NodG1s
+[/Users/spenceraddis/Desktop/EECS 581/Battleship_p1/BlazorBattleship/Pages/_Host.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvX0hvc3QuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/moldy/OneDrive/Desktop/Github/Battleship/BlazorBattleship/Pages/_Layout.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX0xheW91dC5jc2h0bWw=
+[/Users/spenceraddis/Desktop/EECS 581/Battleship_p1/BlazorBattleship/Pages/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvX0xheW91dC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
