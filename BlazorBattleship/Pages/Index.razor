@@ -5,60 +5,62 @@
 
 <PageTitle>Battleship</PageTitle>
 
-@if ((IsSetup == false && IsGameStart == false) || userInput == "")
+@if ((currentGameState == GameState.Initial) || userInput == "")
 {
     <div class="form-group">
         <label>
             Enter your name:
             <input @bind="userInput" />
         </label>
-        <button class="play-buton" @onclick="(() => {IsSetup = true;})">Play</button>
+        <button class="play-buton" @onclick="(() => {currentGameState = GameState.Setup;})">Play</button>
     </div>
 }
 
-@if (userInput!="" && IsSetup == true)
+@if (userInput != "" && (currentGameState == GameState.Setup || currentGameState == GameState.Playing))
 {
     <div class="user-board">
-        <h3>Set Up Board</h3>
+        <h3>@(currentGameState == GameState.Setup ? "Set Up Board" : "Your Board")</h3>
         @for (int i = 0; i < 10; i++)
         {
             <div class="row">
                 @for (int j = 0; j < 10; j++)
                 {
-                    int i_temp = i;
-                    int j_temp = j;
-                    <button class="square" @onclick='(() => {i_Input = i_temp; j_Input = j_temp;})'></button>
+                    (int x, int y) coordinate = new (j, i);
+                    <button class="square" @onclick='(() => { coordinates = coordinate; })'></button>
                 }
             </div>
         }
-        <button class="square" @onclick="(() => {IsSetup = false;; IsGameStart=true;})">Play</button>
+
+        @if (currentGameState == GameState.Setup)
+        {
+            <button class="square" @onclick="(() => { currentGameState = GameState.Playing; })">Start Game</button>
+        }
     </div>
 }
 
-@if (IsSetup == false && IsGameStart == true)
+@if (currentGameState == GameState.Playing)
 {
     <div class="player-boards">
-        <div class="user-board">
-            <h3>Board</h3>
-            @for (int i=0; i<10; i++)
+        <div class="opponent-board">
+            <h3>Opponent's Board</h3>
+            @for (int i = 0; i < 10; i++)
             {
                 <div class="row">
-                    @for (int j=0; j<10; j++)
+                    @for (int j = 0; j < 10; j++)
                     {
-                        int i_temp = i;
-                        int j_temp = j;
-                        <button class="square" @onclick='(() => {i_Input = i_temp; j_Input = j_temp;})'></button>
+                        (int x, int y) coordinate = new (i, j);
+                        <button class="square" @onclick='(() => { coordinates = coordinate; })'></button>
                     }
                 </div>
             }
         </div>
 
-        <button @onclick="Fire" disabled="@(IsConnected == false || IsTurn == false)">Fire</button>
+        <button @onclick="Fire" disabled="@(currentGameState == GameState.Waiting || !coordinates.HasValue)">Fire</button>
 
         <ul id="messagesList">
         @foreach (var move in moves)
         {
-                <li>@move</li>
+            <li>@move</li>
         }
         </ul>
     </div>
@@ -69,16 +71,18 @@
     private HubConnection? hubConnection;
     private List<string> moves = new List<string>();
     private string? userInput = "";
-    private int? i_Input;
-    private int? j_Input;
+    private (int x,int y)? coordinates;
 
-    private bool IsTurn = true;
-    private bool IsSetup = false;
-    private bool IsGameStart = false;
+    // Game board tracking (10x10 grids for both players)
+    private bool[,] playerBoard = new bool[10,10]; // Stores player's ships
+    private bool[,] opponentBoard = new bool[10,10]; // Stores hits/misses on opponent
 
-    <!-- game variables -->
-    private int ShipNumber = 0;
-    //private int 
+    private enum GameState { Initial, Setup, Playing, Waiting, GameOver }
+    private GameState currentGameState = GameState.Initial;
+
+    private bool isShipHorizontal = true; // To manage ship placement direction
+    private int shipCount = 0;
+    
 
 
     //  runs when client connects
@@ -91,27 +95,27 @@
             .Build();
 
         // when a user and message are received from the connection...
-        hubConnection.On<string, int, int>("ReceiveCoordinates", (user, i, j) =>
+        hubConnection.On<string, string>("ReceiveCoordinates", (user, coordinates) =>
         {
-            //
-            var formattedMessage = $"{user} fires at {i}, {j}";
+            var formattedMessage = $"{user} fires at {coordinates}";
             moves.Add(formattedMessage);
             InvokeAsync(StateHasChanged);
-            //IsTurn = true;
         });
 
         hubConnection.On<string, string, bool>("ReceiveFireInformation", (user, coordinates, wasHit) =>
         {
             if (wasHit)
             {
-                var formattedMessage = $"{user} hit a ship at {coordinates}";
+                var formattedMessage = wasHit ? $"{user} hit a ship at {coordinates}" : $"{user} missed at {coordinates}";
                 moves.Add(formattedMessage);
                 InvokeAsync(StateHasChanged);
+                // Update board status for hit
             }
             else
             {
                 var formattedMessage = $"{user} missed at {coordinates}";
             }
+            // Check if all ships are sunk for game over condition
         });
 
         await hubConnection.StartAsync();
@@ -119,10 +123,10 @@
 
     private async Task Fire()
     {
-        if (hubConnection is not null)
+        if (hubConnection is not null && coordinates.HasValue)
         {
-            await hubConnection.SendAsync("SendCoordinates", userInput, i_Input, j_Input);
-            //IsTurn = false;
+            await hubConnection.SendAsync("SendCoordinates", userInput, coordinates.Value.x, coordinates.Value.y);
+            currentGameState = GameState.Playing;
         }
     }
 
@@ -135,4 +139,16 @@
             await hubConnection.DisposeAsync();
         }
     }
+    private void PlaceShip(int shipLength, int startX, int startY, bool isHorizontal)
+    {
+        for (int i = 0; i < shipLength; i++)
+        {
+            if (isHorizontal)
+                playerBoard[startX, startY + i] = true;
+            else
+                playerBoard[startX + i, startY] = true;
+        }
+    }
+
+//End code
 }
