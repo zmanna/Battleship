@@ -12,14 +12,15 @@
             Enter your name:
             <input @bind="userInput" />
         </label>
-        <button class="play-buton" @onclick="(() => {IsSetup = true;})">Play</button>
+        <button class="play-button" @onclick="(() => { IsSetup = true; })">Play</button>
     </div>
 }
 
-@if (userInput!="" && IsSetup == true)
+@if (userInput != "" && IsSetup == true && !IsGameStart)
 {
     <div class="user-board">
         <h3>Set Up Board</h3>
+        @* Display the grid for ship placement *@
         @for (int i = 0; i < 10; i++)
         {
             <div class="row">
@@ -27,11 +28,21 @@
                 {
                     int i_temp = i;
                     int j_temp = j;
-                    <button class="square" @onclick='(() => {i_Input = i_temp; j_Input = j_temp;})'></button>
+                    <button class="square" 
+                            @onclick='(() => PlaceShip(i_temp, j_temp))'
+                            disabled="@ShipPositioned(i_temp, j_temp)">
+                        @DisplayShipCell(i_temp, j_temp)
+                    </button>
                 }
             </div>
         }
-        <button class="square" @onclick="(() => {IsSetup = false;; IsGameStart=true;})">Play</button>
+
+        @* Button to switch between horizontal/vertical orientation *@
+        <button @onclick="ToggleOrientation">Switch Orientation (Current: @CurrentOrientation)</button>
+
+        <button class="play-button" @onclick="ConfirmShipPlacement" disabled="@!(AllShipsPlaced())">
+            Confirm Setup
+        </button>
     </div>
 }
 
@@ -49,17 +60,16 @@
                         int j_temp = j;
                         <button class="square" @onclick='(() => {i_Input = i_temp; j_Input = j_temp;})'></button>
                     }
-                </div>
             }
         </div>
 
         <button @onclick="Fire" disabled="@(IsConnected == false || IsTurn == false)">Fire</button>
 
         <ul id="messagesList">
-        @foreach (var move in moves)
-        {
+            @foreach (var move in moves)
+            {
                 <li>@move</li>
-        }
+            }
         </ul>
     </div>
 }
@@ -76,10 +86,13 @@
     private bool IsSetup = false;
     private bool IsGameStart = false;
 
-    <!-- game variables -->
-    private int ShipNumber = 0;
-    //private int 
+    private enum Orientation { Horizontal, Vertical }
+    private Orientation CurrentOrientation = Orientation.Horizontal;
 
+    private int CurrentShipLength = 1;  // Start placing the first ship
+    private int TotalShips = 5;         // Total number of ships to place
+    private List<Ship> Ships = new List<Ship>();
+    private bool[,] Board = new bool[10, 10]; // Track placed ship positions
 
     //  runs when client connects
     protected override async Task OnInitializedAsync()
@@ -93,7 +106,6 @@
         // when a user and message are received from the connection...
         hubConnection.On<string, int, int>("ReceiveCoordinates", (user, i, j) =>
         {
-            //
             var formattedMessage = $"{user} fires at {i}, {j}";
             moves.Add(formattedMessage);
             InvokeAsync(StateHasChanged);
@@ -133,6 +145,112 @@
         if (hubConnection is not null)
         {
             await hubConnection.DisposeAsync();
+        }
+    }
+
+    private void ToggleOrientation()
+    {
+        // Toggle between horizontal and vertical
+        CurrentOrientation = CurrentOrientation == Orientation.Horizontal
+            ? Orientation.Vertical
+            : Orientation.Horizontal;
+    }
+
+    private bool ShipPositioned(int row, int col)
+    {
+        // Check if a ship is placed at the given position
+        return Ships.Any(ship => ship.OccupiesPosition(row, col));
+    }
+
+    private string DisplayShipCell(int row, int col)
+    {
+        // Display the ship symbol if placed
+        return ShipPositioned(row, col) ? "S" : "";
+    }
+
+    private void PlaceShip(int row, int col)
+    {
+        if (IsValidPlacement(row, col))
+        {
+            Ships.Add(new Ship(row, col, CurrentShipLength, CurrentOrientation));
+            MarkShipOnBoard(row, col);
+            CurrentShipLength++;  // Move to the next ship
+        }
+    }
+
+    private bool IsValidPlacement(int row, int col)
+    {
+        // Ensure the ship fits within the grid and doesn’t overlap with others
+        if (CurrentOrientation == Orientation.Horizontal)
+        {
+            if (col + CurrentShipLength > 10) return false; // Out of bounds
+            for (int i = 0; i < CurrentShipLength; i++)
+                if (Board[row, col + i]) return false;  // Overlap check
+        }
+        else // Vertical
+        {
+            if (row + CurrentShipLength > 10) return false;
+            for (int i = 0; i < CurrentShipLength; i++)
+                if (Board[row + i, col]) return false;
+        }
+
+        return true;
+    }
+
+    private void MarkShipOnBoard(int row, int col)
+    {
+        // Mark the ship on the board (set true for ship positions)
+        if (CurrentOrientation == Orientation.Horizontal)
+        {
+            for (int i = 0; i < CurrentShipLength; i++)
+                Board[row, col + i] = true;
+        }
+        else
+        {
+            for (int i = 0; i < CurrentShipLength; i++)
+                Board[row + i, col] = true;
+        }
+    }
+
+    private bool AllShipsPlaced()
+    {
+        // Check if all ships have been placed
+        return CurrentShipLength > TotalShips;
+    }
+
+    private async Task ConfirmShipPlacement()
+    {
+        if (AllShipsPlaced())
+        {
+            // Send the ship positions to the server
+            await hubConnection.SendAsync("SendShipPositions", Ships);
+            IsSetup = false;  // Move to the game start phase
+            IsGameStart = true;
+        }
+    }
+
+    private class Ship
+    {
+        public int StartRow { get; }
+        public int StartCol { get; }
+        public int Length { get; }
+        public Orientation Orientation { get; }
+
+        public Ship(int row, int col, int length, Orientation orientation)
+        {
+            StartRow = row;
+            StartCol = col;
+            Length = length;
+            Orientation = orientation;
+        }
+
+        public bool OccupiesPosition(int row, int col)
+        {
+            // Check if this ship occupies the given position
+            if (Orientation == Orientation.Horizontal)
+                return row == StartRow && col >= StartCol && col < StartCol + Length;
+            else
+                return col == StartCol && row >= StartRow && row < StartRow + Length;
         }
     }
 }
