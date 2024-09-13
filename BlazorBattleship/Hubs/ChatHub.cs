@@ -8,9 +8,10 @@ namespace BlazorBattleship.Hubs
             await Clients.Others.SendAsync("ReceiveCoordinates", user, x, y);
         }
 
-        public async Task SendHit(string user, string coordinates, bool wasHit)
+        public async Task SendHitMiss(bool wasHit)
         {
-            await Clients.All.SendAsync("ReceiveFireInformation", user, coordinates, wasHit);
+            await Clients.Others.SendAsync("ShotResponse", wasHit);
         }
+
     }
 }

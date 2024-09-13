@@ -60,7 +60,7 @@
                     {
                         int xCoord = x;//Capturing x and y coordinates so that their values at button creation are preserved.
                         int yCoord = y;
-                        <button class="@(opponentBoard[xCoord, yCoord] ? "hit" : opponentBoard[xCoord, yCoord] !? "miss" : "square")" @onclick='(() => {
+                        <button class="@(OpponentBoardInfo(xCoord, yCoord))" @onclick='(() => {
                             SetCoordinates(xCoord, yCoord);                            
                         })'></button>
                     }
@@ -104,11 +104,13 @@
     private bool[,] previewBoard = new bool[10, 10]; // Stores ship previews
 
     private bool[,] opponentBoard = new bool[10,10]; // Stores hits/misses on opponent
+    private bool[,] opponentDefaultBoard = new bool[10, 10]; // A default state for the opponents board when neither hit nor miss is recorded
     #endregion
     #region Game State Info
     private enum GameState { Initial, Setup, Playing, Waiting, GameOver }
     private GameState currentGameState = GameState.Initial;
     private string currentPlayer = "";
+    private string opponent = "";
     #endregion
     #region Ship Parameters
     private bool isShipHorizontal = true; // To manage ship placement direction
@@ -128,12 +130,13 @@
     }
     #endregion
 
-    #region Player Board Modification
+    #region Board Modification
+    #region Player Board
     private string GetCellClass(int x, int y)
     {
-    /*Changes the type of grid space depending on whether or not a ship is currently there.
-     * Effectively this allows for the preview to not override existing ships on the setup board.
-     */
+        /*Changes the type of grid space depending on whether or not a ship is currently there.
+         * Effectively this allows for the preview to not override existing ships on the setup board.
+        */
         if (playerBoard[x, y])//If there is a ship on this space
         {
             return "ship";//The space is of type ship
@@ -229,6 +232,24 @@
         }
     }
     #endregion
+    #region Opponent Board
+    private string OpponentBoardInfo(int x, int y)
+    {
+        if(opponentDefaultBoard[x,y] && opponentBoard[x,y])
+        {
+            return "hit";
+        }
+        else if(opponentDefaultBoard[x,y] && !opponentBoard[x,y])
+        {
+            return "miss";
+        }
+        else
+        {
+            return "square";
+        }
+    }
+    #endregion
+    #endregion
 
     #region Networking Functionality
     //  runs when client connects
@@ -243,25 +264,32 @@
         // when a user and message are received from the connection...
         hubConnection.On<string, int ,int>("ReceiveCoordinates", (user, x, y) =>
         {
+            hubConnection.SendAsync("SendHitMiss", playerBoard[x, y]);
             var formattedMessage = $"{user} fires at {x} , {y}";
             moves.Add(formattedMessage);
             InvokeAsync(StateHasChanged);
         });
 
-        hubConnection.On<string, string, bool>("ReceiveFireInformation", (user, coordinates, wasHit) =>
+        hubConnection.On<bool>("ShotResponse", (wasHit) =>
         {
+            string message;
+
             if (wasHit)
             {
-                var formattedMessage = wasHit ? $"{user} hit a ship at {coordinates}" : $"{user} missed at {coordinates}";
-                moves.Add(formattedMessage);
-                InvokeAsync(StateHasChanged);
+                message = $"Your Shot at {coordinates} was a hit!";
+                opponentBoard[coordinates.Value.x, coordinates.Value.y] = true;
+                opponentDefaultBoard[coordinates.Value.x, coordinates.Value.y] = true;
                 // Update board status for hit
             }
             else
             {
-                var formattedMessage = $"{user} missed at {coordinates}";
+                message = $" Your Shot at {coordinates} was a miss!";
+                opponentDefaultBoard[coordinates.Value.x, coordinates.Value.y] = true;
             }
             // Check if all ships are sunk for game over condition
+            var formattedMessage = message;
+            moves.Add(formattedMessage);
+            InvokeAsync(StateHasChanged);
         });
 
         await hubConnection.StartAsync();
