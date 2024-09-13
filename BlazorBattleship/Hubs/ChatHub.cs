@@ -3,14 +3,14 @@ namespace BlazorBattleship.Hubs
 {
     public class ChatHub : Hub
     {
-        public Task SendCoordinates(string user, int i, int j)
+        public async Task SendCoordinates(string user, int x, int y)
         {
-            return Clients.Others.SendAsync("ReceiveCoordinates", user, i, j);
+            await Clients.Others.SendAsync("ReceiveCoordinates", user, x, y);
         }
 
-        public Task SendHit(string user, string coordinates, bool wasHit)
+        public async Task SendHit(string user, string coordinates, bool wasHit)
         {
-            return Clients.All.SendAsync("ReceiveFireInformation", user, coordinates, wasHit);
+            await Clients.All.SendAsync("ReceiveFireInformation", user, coordinates, wasHit);
         }
     }
 }

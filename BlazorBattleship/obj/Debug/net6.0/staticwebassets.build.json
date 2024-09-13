@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "NkMgFEG0gySVWL8gTq4vToeyN3eviseqtQpIftBzz3g=",
+  "Hash": "+T6aJoiAh7LrvxTLo+zvhBXWdsNOmSycJizdmx76f1o=",
   "Source": "BlazorBattleship",
   "BasePath": "_content/BlazorBattleship",
   "Mode": "Default",
@@ -10,17 +10,17 @@
     {
       "Name": "BlazorBattleship\\wwwroot",
       "Source": "BlazorBattleship",
-      "ContentRoot": "C:\\Users\\moldy\\OneDrive\\Desktop\\Github\\Battleship\\BlazorBattleship\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\A Big Baby\\Documents\\GitHub\\Battleship\\BlazorBattleship\\wwwroot\\",
       "BasePath": "_content/BlazorBattleship",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "C:\\Users\\moldy\\OneDrive\\Desktop\\Github\\Battleship\\BlazorBattleship\\obj\\Debug\\net6.0\\scopedcss\\bundle\\BlazorBattleship.styles.css",
+      "Identity": "C:\\Users\\A Big Baby\\Documents\\GitHub\\Battleship\\BlazorBattleship\\obj\\Debug\\net6.0\\scopedcss\\bundle\\BlazorBattleship.styles.css",
       "SourceId": "BlazorBattleship",
       "SourceType": "Computed",
-      "ContentRoot": "C:\\Users\\moldy\\OneDrive\\Desktop\\Github\\Battleship\\BlazorBattleship\\obj\\Debug\\net6.0\\scopedcss\\bundle\\",
+      "ContentRoot": "C:\\Users\\A Big Baby\\Documents\\GitHub\\Battleship\\BlazorBattleship\\obj\\Debug\\net6.0\\scopedcss\\bundle\\",
       "BasePath": "_content/BlazorBattleship",
       "RelativePath": "BlazorBattleship.styles.css",
       "AssetKind": "All",
@@ -31,13 +31,13 @@
       "AssetTraitValue": "ApplicationBundle",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Users\\moldy\\OneDrive\\Desktop\\Github\\Battleship\\BlazorBattleship\\obj\\Debug\\net6.0\\scopedcss\\bundle\\BlazorBattleship.styles.css"
+      "OriginalItemSpec": "C:\\Users\\A Big Baby\\Documents\\GitHub\\Battleship\\BlazorBattleship\\obj\\Debug\\net6.0\\scopedcss\\bundle\\BlazorBattleship.styles.css"
     },
     {
-      "Identity": "C:\\Users\\moldy\\OneDrive\\Desktop\\Github\\Battleship\\BlazorBattleship\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\BlazorBattleship.bundle.scp.css",
+      "Identity": "C:\\Users\\A Big Baby\\Documents\\GitHub\\Battleship\\BlazorBattleship\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\BlazorBattleship.bundle.scp.css",
       "SourceId": "BlazorBattleship",
       "SourceType": "Computed",
-      "ContentRoot": "C:\\Users\\moldy\\OneDrive\\Desktop\\Github\\Battleship\\BlazorBattleship\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\",
+      "ContentRoot": "C:\\Users\\A Big Baby\\Documents\\GitHub\\Battleship\\BlazorBattleship\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\",
       "BasePath": "_content/BlazorBattleship",
       "RelativePath": "BlazorBattleship.bundle.scp.css",
       "AssetKind": "All",
@@ -48,13 +48,13 @@
       "AssetTraitValue": "ProjectBundle",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Users\\moldy\\OneDrive\\Desktop\\Github\\Battleship\\BlazorBattleship\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\BlazorBattleship.bundle.scp.css"
+      "OriginalItemSpec": "C:\\Users\\A Big Baby\\Documents\\GitHub\\Battleship\\BlazorBattleship\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\BlazorBattleship.bundle.scp.css"
     },
     {
-      "Identity": "C:\\Users\\moldy\\OneDrive\\Desktop\\Github\\Battleship\\BlazorBattleship\\wwwroot\\css\\bootstrap\\bootstrap.min.css",
+      "Identity": "C:\\Users\\A Big Baby\\Documents\\GitHub\\Battleship\\BlazorBattleship\\wwwroot\\css\\bootstrap\\bootstrap.min.css",
       "SourceId": "BlazorBattleship",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\moldy\\OneDrive\\Desktop\\Github\\Battleship\\BlazorBattleship\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\A Big Baby\\Documents\\GitHub\\Battleship\\BlazorBattleship\\wwwroot\\",
       "BasePath": "_content/BlazorBattleship",
       "RelativePath": "css/bootstrap/bootstrap.min.css",
       "AssetKind": "All",
@@ -68,10 +68,10 @@
       "OriginalItemSpec": "wwwroot\\css\\bootstrap\\bootstrap.min.css"
     },
     {
-      "Identity": "C:\\Users\\moldy\\OneDrive\\Desktop\\Github\\Battleship\\BlazorBattleship\\wwwroot\\css\\bootstrap\\bootstrap.min.css.map",
+      "Identity": "C:\\Users\\A Big Baby\\Documents\\GitHub\\Battleship\\BlazorBattleship\\wwwroot\\css\\bootstrap\\bootstrap.min.css.map",
       "SourceId": "BlazorBattleship",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\moldy\\OneDrive\\Desktop\\Github\\Battleship\\BlazorBattleship\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\A Big Baby\\Documents\\GitHub\\Battleship\\BlazorBattleship\\wwwroot\\",
       "BasePath": "_content/BlazorBattleship",
       "RelativePath": "css/bootstrap/bootstrap.min.css.map",
       "AssetKind": "All",
@@ -85,10 +85,10 @@
       "OriginalItemSpec": "wwwroot\\css\\bootstrap\\bootstrap.min.css.map"
     },
     {
-      "Identity": "C:\\Users\\moldy\\OneDrive\\Desktop\\Github\\Battleship\\BlazorBattleship\\wwwroot\\css\\open-iconic\\font\\css\\open-iconic-bootstrap.min.css",
+      "Identity": "C:\\Users\\A Big Baby\\Documents\\GitHub\\Battleship\\BlazorBattleship\\wwwroot\\css\\open-iconic\\font\\css\\open-iconic-bootstrap.min.css",
       "SourceId": "BlazorBattleship",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\moldy\\OneDrive\\Desktop\\Github\\Battleship\\BlazorBattleship\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\A Big Baby\\Documents\\GitHub\\Battleship\\BlazorBattleship\\wwwroot\\",
       "BasePath": "_content/BlazorBattleship",
       "RelativePath": "css/open-iconic/font/css/open-iconic-bootstrap.min.css",
       "AssetKind": "All",
@@ -102,10 +102,10 @@
       "OriginalItemSpec": "wwwroot\\css\\open-iconic\\font\\css\\open-iconic-bootstrap.min.css"
     },
     {
-      "Identity": "C:\\Users\\moldy\\OneDrive\\Desktop\\Github\\Battleship\\BlazorBattleship\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.eot",
+      "Identity": "C:\\Users\\A Big Baby\\Documents\\GitHub\\Battleship\\BlazorBattleship\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.eot",
       "SourceId": "BlazorBattleship",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\moldy\\OneDrive\\Desktop\\Github\\Battleship\\BlazorBattleship\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\A Big Baby\\Documents\\GitHub\\Battleship\\BlazorBattleship\\wwwroot\\",
       "BasePath": "_content/BlazorBattleship",
       "RelativePath": "css/open-iconic/font/fonts/open-iconic.eot",
       "AssetKind": "All",
@@ -119,10 +119,10 @@
       "OriginalItemSpec": "wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.eot"
     },
     {
-      "Identity": "C:\\Users\\moldy\\OneDrive\\Desktop\\Github\\Battleship\\BlazorBattleship\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.otf",
+      "Identity": "C:\\Users\\A Big Baby\\Documents\\GitHub\\Battleship\\BlazorBattleship\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.otf",
       "SourceId": "BlazorBattleship",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\moldy\\OneDrive\\Desktop\\Github\\Battleship\\BlazorBattleship\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\A Big Baby\\Documents\\GitHub\\Battleship\\BlazorBattleship\\wwwroot\\",
       "BasePath": "_content/BlazorBattleship",
       "RelativePath": "css/open-iconic/font/fonts/open-iconic.otf",
       "AssetKind": "All",
@@ -136,10 +136,10 @@
       "OriginalItemSpec": "wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.otf"
     },
     {
-      "Identity": "C:\\Users\\moldy\\OneDrive\\Desktop\\Github\\Battleship\\BlazorBattleship\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.svg",
+      "Identity": "C:\\Users\\A Big Baby\\Documents\\GitHub\\Battleship\\BlazorBattleship\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.svg",
       "SourceId": "BlazorBattleship",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\moldy\\OneDrive\\Desktop\\Github\\Battleship\\BlazorBattleship\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\A Big Baby\\Documents\\GitHub\\Battleship\\BlazorBattleship\\wwwroot\\",
       "BasePath": "_content/BlazorBattleship",
       "RelativePath": "css/open-iconic/font/fonts/open-iconic.svg",
       "AssetKind": "All",
@@ -153,10 +153,10 @@
       "OriginalItemSpec": "wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.svg"
     },
     {
-      "Identity": "C:\\Users\\moldy\\OneDrive\\Desktop\\Github\\Battleship\\BlazorBattleship\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.ttf",
+      "Identity": "C:\\Users\\A Big Baby\\Documents\\GitHub\\Battleship\\BlazorBattleship\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.ttf",
       "SourceId": "BlazorBattleship",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\moldy\\OneDrive\\Desktop\\Github\\Battleship\\BlazorBattleship\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\A Big Baby\\Documents\\GitHub\\Battleship\\BlazorBattleship\\wwwroot\\",
       "BasePath": "_content/BlazorBattleship",
       "RelativePath": "css/open-iconic/font/fonts/open-iconic.ttf",
       "AssetKind": "All",
@@ -170,10 +170,10 @@
       "OriginalItemSpec": "wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.ttf"
     },
     {
-      "Identity": "C:\\Users\\moldy\\OneDrive\\Desktop\\Github\\Battleship\\BlazorBattleship\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.woff",
+      "Identity": "C:\\Users\\A Big Baby\\Documents\\GitHub\\Battleship\\BlazorBattleship\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.woff",
       "SourceId": "BlazorBattleship",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\moldy\\OneDrive\\Desktop\\Github\\Battleship\\BlazorBattleship\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\A Big Baby\\Documents\\GitHub\\Battleship\\BlazorBattleship\\wwwroot\\",
       "BasePath": "_content/BlazorBattleship",
       "RelativePath": "css/open-iconic/font/fonts/open-iconic.woff",
       "AssetKind": "All",
@@ -187,10 +187,10 @@
       "OriginalItemSpec": "wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.woff"
     },
     {
-      "Identity": "C:\\Users\\moldy\\OneDrive\\Desktop\\Github\\Battleship\\BlazorBattleship\\wwwroot\\css\\open-iconic\\FONT-LICENSE",
+      "Identity": "C:\\Users\\A Big Baby\\Documents\\GitHub\\Battleship\\BlazorBattleship\\wwwroot\\css\\open-iconic\\FONT-LICENSE",
       "SourceId": "BlazorBattleship",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\moldy\\OneDrive\\Desktop\\Github\\Battleship\\BlazorBattleship\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\A Big Baby\\Documents\\GitHub\\Battleship\\BlazorBattleship\\wwwroot\\",
       "BasePath": "_content/BlazorBattleship",
       "RelativePath": "css/open-iconic/FONT-LICENSE",
       "AssetKind": "All",
@@ -204,10 +204,10 @@
       "OriginalItemSpec": "wwwroot\\css\\open-iconic\\FONT-LICENSE"
     },
     {
-      "Identity": "C:\\Users\\moldy\\OneDrive\\Desktop\\Github\\Battleship\\BlazorBattleship\\wwwroot\\css\\open-iconic\\ICON-LICENSE",
+      "Identity": "C:\\Users\\A Big Baby\\Documents\\GitHub\\Battleship\\BlazorBattleship\\wwwroot\\css\\open-iconic\\ICON-LICENSE",
       "SourceId": "BlazorBattleship",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\moldy\\OneDrive\\Desktop\\Github\\Battleship\\BlazorBattleship\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\A Big Baby\\Documents\\GitHub\\Battleship\\BlazorBattleship\\wwwroot\\",
       "BasePath": "_content/BlazorBattleship",
       "RelativePath": "css/open-iconic/ICON-LICENSE",
       "AssetKind": "All",
@@ -221,10 +221,10 @@
       "OriginalItemSpec": "wwwroot\\css\\open-iconic\\ICON-LICENSE"
     },
     {
-      "Identity": "C:\\Users\\moldy\\OneDrive\\Desktop\\Github\\Battleship\\BlazorBattleship\\wwwroot\\css\\open-iconic\\README.md",
+      "Identity": "C:\\Users\\A Big Baby\\Documents\\GitHub\\Battleship\\BlazorBattleship\\wwwroot\\css\\open-iconic\\README.md",
       "SourceId": "BlazorBattleship",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\moldy\\OneDrive\\Desktop\\Github\\Battleship\\BlazorBattleship\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\A Big Baby\\Documents\\GitHub\\Battleship\\BlazorBattleship\\wwwroot\\",
       "BasePath": "_content/BlazorBattleship",
       "RelativePath": "css/open-iconic/README.md",
       "AssetKind": "All",
@@ -238,10 +238,10 @@
       "OriginalItemSpec": "wwwroot\\css\\open-iconic\\README.md"
     },
     {
-      "Identity": "C:\\Users\\moldy\\OneDrive\\Desktop\\Github\\Battleship\\BlazorBattleship\\wwwroot\\css\\site.css",
+      "Identity": "C:\\Users\\A Big Baby\\Documents\\GitHub\\Battleship\\BlazorBattleship\\wwwroot\\css\\site.css",
       "SourceId": "BlazorBattleship",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\moldy\\OneDrive\\Desktop\\Github\\Battleship\\BlazorBattleship\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\A Big Baby\\Documents\\GitHub\\Battleship\\BlazorBattleship\\wwwroot\\",
       "BasePath": "_content/BlazorBattleship",
       "RelativePath": "css/site.css",
       "AssetKind": "All",
@@ -255,10 +255,10 @@
       "OriginalItemSpec": "wwwroot\\css\\site.css"
     },
     {
-      "Identity": "C:\\Users\\moldy\\OneDrive\\Desktop\\Github\\Battleship\\BlazorBattleship\\wwwroot\\favicon.ico",
+      "Identity": "C:\\Users\\A Big Baby\\Documents\\GitHub\\Battleship\\BlazorBattleship\\wwwroot\\favicon.ico",
       "SourceId": "BlazorBattleship",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\moldy\\OneDrive\\Desktop\\Github\\Battleship\\BlazorBattleship\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\A Big Baby\\Documents\\GitHub\\Battleship\\BlazorBattleship\\wwwroot\\",
       "BasePath": "_content/BlazorBattleship",
       "RelativePath": "favicon.ico",
       "AssetKind": "All",
