@@ -19,14 +19,24 @@
 @if (userInput != "" && (currentGameState == GameState.Setup || currentGameState == GameState.Playing))
 {
     <div class="user-board">
-        <h3>@(currentGameState == GameState.Setup ? "Set Up Board" : "Your Board")</h3>
-        @for (int i = 0; i < 10; i++)
+        <h3>@(currentGameState == GameState.Setup ? "Place your ships!" : "Your Board")</h3>
+
+        <div>
+            <button @onclick="ToggleShipOrientation">@((isShipHorizontal ? "Horizontal" : "Vertical") + " Placement")</button>
+        </div>
+
+        @for (int y = 0; y < 10; y++)
         {
             <div class="row">
-                @for (int j = 0; j < 10; j++)
+                @for (int x = 0; x < 10; x++)
                 {
-                    (int x, int y) coordinate = new (j, i);
-                    <button class="square" @onclick='(() => { coordinates = coordinate; })'></button>
+                    int xCoord = x;//Capturing the x and Y coordinates so that their values at button creation are preserved.
+                    int yCoord = y;
+                    <button class="@(GetCellClass(xCoord, yCoord))" 
+                    @onclick='(() => { if(currentGameState == GameState.Setup) PlaceShip(xCoord, yCoord, isShipHorizontal);})'
+                    @onmouseover='(() => {if(currentGameState == GameState.Setup) ShowShipPreview(xCoord, yCoord, isShipHorizontal); })'
+                    @onmouseout='(() => { if(currentGameState == GameState.Setup) HideShipPreview(xCoord, yCoord, isShipHorizontal); })'
+                    ></button>
                 }
             </div>
         }
@@ -43,19 +53,29 @@
     <div class="player-boards">
         <div class="opponent-board">
             <h3>Opponent's Board</h3>
-            @for (int i = 0; i < 10; i++)
+            @for (int y = 0; y < 10; y++)
             {
                 <div class="row">
-                    @for (int j = 0; j < 10; j++)
+                    @for (int x = 0; x < 10; x++)
                     {
-                        (int x, int y) coordinate = new (i, j);
-                        <button class="square" @onclick='(() => { coordinates = coordinate; })'></button>
+                        int xCoord = x;//Capturing x and y coordinates so that their values at button creation are preserved.
+                        int yCoord = y;
+                        <button class="@(opponentBoard[xCoord, yCoord] ? "hit" : opponentBoard[xCoord, yCoord] !? "miss" : "square")" @onclick='(() => {
+                            SetCoordinates(xCoord, yCoord);                            
+                        })'></button>
                     }
                 </div>
+                }
             }
         </div>
 
-        <button @onclick="Fire" disabled="@(currentGameState == GameState.Waiting || !coordinates.HasValue)">Fire</button>
+        <!-- Display selected coordinates in a text box -->
+        <div class="fire-control">
+            <button @onclick="Fire" disabled="@(currentGameState == GameState.Waiting || !coordinates.HasValue)">Fire</button>
+
+            <!-- Display current selected coordinates -->
+            <input type="text" value="@GetCoordinatesText()" readonly style="margin-left: 10px; width: 100px;" />
+        </div>
 
         <ul id="messagesList">
         @foreach (var move in moves)
@@ -74,16 +94,129 @@
     private (int x,int y)? coordinates;
 
     // Game board tracking (10x10 grids for both players)
-    private bool[,] playerBoard = new bool[10,10]; // Stores player's ships
+    private bool[,] playerBoard = new bool[10, 10]; // Stores player's ships
+    private bool[,] previewBoard = new bool[10, 10]; // Stores ship previews
+
     private bool[,] opponentBoard = new bool[10,10]; // Stores hits/misses on opponent
 
     private enum GameState { Initial, Setup, Playing, Waiting, GameOver }
     private GameState currentGameState = GameState.Initial;
+    private string currentPlayer = "";
 
     private bool isShipHorizontal = true; // To manage ship placement direction
     private int shipCount = 0;
-    
+    private int shipLimit = 3;
 
+    private void SetCoordinates(int x, int y)
+    {
+        coordinates = (x, y);
+    }
+
+    private void ToggleShipOrientation()
+    {
+        isShipHorizontal = !isShipHorizontal;
+    }
+
+    private string GetCellClass(int x, int y)
+    /*Changes the type of grid space depending on whether or not a ship is currently there.
+     * Effectively this allows for the preview to not override existing ships on the setup board.
+     */
+    {
+        if (playerBoard[x, y])//If there is a ship on this space
+        {
+            return "ship";//The space is of type ship
+        }
+        else if (previewBoard[x, y])//If the space has a preview of a ship
+        {
+            return "preview";//The space is of type preview
+        }
+        else//If neither are true
+        {
+            return "square";//The space is blank
+        }
+    }
+
+    private void ShowShipPreview(int startX, int startY, bool isHorizontal)
+    {
+        int shipLength = shipCount + 1;
+        if (isHorizontal)
+        {
+            for (int i = 0; i < shipLength; i++)
+            {
+                if (startX + i < 10)
+                {
+                    previewBoard[startX + i, startY] = true;
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < shipLength; i++)
+            {
+                if (startY + i < 10)
+                {
+                    previewBoard[startX, startY + i] = true;
+                }
+            }
+        }
+    }
+
+    private void HideShipPreview(int startX, int startY, bool isHorizontal)
+    {
+        int shipLength = shipCount + 1;
+        if (isHorizontal)
+        {
+            for (int i = 0; i < shipLength; i++)
+            {
+                if (startX + i < 10)
+                {
+                    previewBoard[startX + i, startY] = false;
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < shipLength; i++)
+            {
+                if (startY + i < 10)
+                {
+                    previewBoard[startX, startY + i] = false;
+                }
+            }
+        }
+    }
+
+
+    private void PlaceShip(int startX, int startY, bool isHorizontal)
+    {
+        int shipLength = shipCount + 1;
+        if (isHorizontal)
+        {
+            if (startX + shipLength <= 10)
+            {
+                for (int i = 0; i < shipLength; i++)
+                {
+                    playerBoard[startX + i, startY] = true;
+                }
+                shipCount++;
+            }
+        }
+        else
+        {
+            if (startY + shipLength <= 10)
+            {
+                for (int i = 0; i < shipLength; i++)
+                {
+                    playerBoard[startX, startY + i] = true;
+                }
+                shipCount++;
+            }
+        }
+        if (shipCount >= shipLimit)
+        {
+            currentGameState = GameState.Playing;
+        }
+    }
 
     //  runs when client connects
     protected override async Task OnInitializedAsync()
@@ -130,6 +263,12 @@
         }
     }
 
+    // Helper function to display the selected coordinates in the text box
+    private string GetCoordinatesText()
+    {
+        return coordinates.HasValue ? $"({coordinates})" : "None";
+    }
+
     public bool IsConnected => hubConnection?.State == HubConnectionState.Connected;
 
     public async ValueTask DisposeAsync()
@@ -139,16 +278,6 @@
             await hubConnection.DisposeAsync();
         }
     }
-    private void PlaceShip(int shipLength, int startX, int startY, bool isHorizontal)
-    {
-        for (int i = 0; i < shipLength; i++)
-        {
-            if (isHorizontal)
-                playerBoard[startX, startY + i] = true;
-            else
-                playerBoard[startX + i, startY] = true;
-        }
-    }
 
-//End code
+//End C# code
 }
