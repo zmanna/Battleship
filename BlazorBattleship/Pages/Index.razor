@@ -88,40 +88,52 @@
 
 
 @code {
+    #region Declarations
+    #region Connection Information
     private HubConnection? hubConnection;
+    public bool IsConnected => hubConnection?.State == HubConnectionState.Connected;
+    #endregion
+    #region Player Input
     private List<string> moves = new List<string>();
     private string? userInput = "";
     private (int x,int y)? coordinates;
-
+    #endregion
+    #region Boards
     // Game board tracking (10x10 grids for both players)
     private bool[,] playerBoard = new bool[10, 10]; // Stores player's ships
     private bool[,] previewBoard = new bool[10, 10]; // Stores ship previews
 
     private bool[,] opponentBoard = new bool[10,10]; // Stores hits/misses on opponent
-
+    #endregion
+    #region Game State Info
     private enum GameState { Initial, Setup, Playing, Waiting, GameOver }
     private GameState currentGameState = GameState.Initial;
     private string currentPlayer = "";
-
+    #endregion
+    #region Ship Parameters
     private bool isShipHorizontal = true; // To manage ship placement direction
     private int shipCount = 0;
     private int shipLimit = 3;
+    #endregion
+    #endregion
 
-    private void SetCoordinates(int x, int y)
+    #region Modifier Functions
+    private void SetCoordinates(int x, int y) //Sets the value of the coordinates tuple for later use
     {
         coordinates = (x, y);
     }
-
-    private void ToggleShipOrientation()
+    private void ToggleShipOrientation() //Toggle ship orientation boolean to track whether or not a placed ship is vertical or horizontal
     {
         isShipHorizontal = !isShipHorizontal;
     }
+    #endregion
 
+    #region Player Board Modification
     private string GetCellClass(int x, int y)
+    {
     /*Changes the type of grid space depending on whether or not a ship is currently there.
      * Effectively this allows for the preview to not override existing ships on the setup board.
      */
-    {
         if (playerBoard[x, y])//If there is a ship on this space
         {
             return "ship";//The space is of type ship
@@ -186,7 +198,6 @@
         }
     }
 
-
     private void PlaceShip(int startX, int startY, bool isHorizontal)
     {
         int shipLength = shipCount + 1;
@@ -217,7 +228,9 @@
             currentGameState = GameState.Playing;
         }
     }
+    #endregion
 
+    #region Networking Functionality
     //  runs when client connects
     protected override async Task OnInitializedAsync()
     {
@@ -228,9 +241,9 @@
             .Build();
 
         // when a user and message are received from the connection...
-        hubConnection.On<string, string>("ReceiveCoordinates", (user, coordinates) =>
+        hubConnection.On<string, int ,int>("ReceiveCoordinates", (user, x, y) =>
         {
-            var formattedMessage = $"{user} fires at {coordinates}";
+            var formattedMessage = $"{user} fires at {x} , {y}";
             moves.Add(formattedMessage);
             InvokeAsync(StateHasChanged);
         });
@@ -263,14 +276,6 @@
         }
     }
 
-    // Helper function to display the selected coordinates in the text box
-    private string GetCoordinatesText()
-    {
-        return coordinates.HasValue ? $"({coordinates})" : "None";
-    }
-
-    public bool IsConnected => hubConnection?.State == HubConnectionState.Connected;
-
     public async ValueTask DisposeAsync()
     {
         if (hubConnection is not null)
@@ -279,5 +284,14 @@
         }
     }
 
+    #endregion
+
+    #region Accessor Functions
+    // Helper function to display the selected coordinates in the text box
+    private string GetCoordinatesText()
+    {
+        return coordinates.HasValue ? $"({coordinates})" : "None";
+    }
+    #endregion
 //End C# code
 }
