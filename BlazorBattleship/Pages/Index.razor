@@ -93,7 +93,7 @@
     private HubConnection? hubConnection;
     public bool IsConnected => hubConnection?.State == HubConnectionState.Connected;
     #endregion
-    #region Player Input
+    #region Player Information
     private List<string> moves = new List<string>();
     private string? userInput = "";
     private (int x,int y)? coordinates;
@@ -102,6 +102,7 @@
     // Game board tracking (10x10 grids for both players)
     private bool[,] playerBoard = new bool[10, 10]; // Stores player's ships
     private bool[,] previewBoard = new bool[10, 10]; // Stores ship previews
+    private bool[,] opponentShots = new bool[10, 10]; // Stores the opponents previous shots
 
     private bool[,] opponentBoard = new bool[10,10]; // Stores hits/misses on opponent
     private bool[,] opponentDefaultBoard = new bool[10, 10]; // A default state for the opponents board when neither hit nor miss is recorded
@@ -128,7 +129,6 @@
     {
         isShipHorizontal = !isShipHorizontal;
     }
-    #endregion
 
     #region Board Modification
     #region Player Board
@@ -137,15 +137,23 @@
         /*Changes the type of grid space depending on whether or not a ship is currently there.
          * Effectively this allows for the preview to not override existing ships on the setup board.
         */
-        if (playerBoard[x, y])//If there is a ship on this space
+        if (playerBoard[x, y] && !opponentShots[x,y])//If there is a ship on this space and the opponent has not shot here yet
         {
             return "ship";//The space is of type ship
+        }
+        else if(playerBoard[x, y] && opponentShots[x,y])//If there is a ship on this space, and the opponent has shot here
+        {
+            return "hit";//The ship has been destroyed
+        }
+        else if(!playerBoard[x, y] && opponentShots[x,y])//If the opponent has shot a tile that does not have a ship on it
+        {
+            return "miss";//The opponent has missed
         }
         else if (previewBoard[x, y])//If the space has a preview of a ship
         {
             return "preview";//The space is of type preview
         }
-        else//If neither are true
+        else//If none are true
         {
             return "square";//The space is blank
         }
@@ -250,6 +258,7 @@
     }
     #endregion
     #endregion
+    #endregion
 
     #region Networking Functionality
     //  runs when client connects
@@ -264,6 +273,8 @@
         // when a user and message are received from the connection...
         hubConnection.On<string, int ,int>("ReceiveCoordinates", (user, x, y) =>
         {
+            opponentShots[x, y] = true;
+
             hubConnection.SendAsync("SendHitMiss", playerBoard[x, y]);
             var formattedMessage = $"{user} fires at {x} , {y}";
             moves.Add(formattedMessage);
