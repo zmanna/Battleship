@@ -115,6 +115,11 @@ a, .btn-link {
     background-color: #17392e !important; /* Different color for preview */
 }
 
+.hit-preview{
+    border: 3px solid red;
+    background-color: lightblue;
+}
+
 .column-headers {
     display: flex;
     margin-left: 0;
