@@ -12,7 +12,25 @@
             Enter your name:
             <input @bind="userInput" />
         </label>
+<<<<<<< Updated upstream
         <button class="play-buton" @onclick="(() => {currentGameState = GameState.Setup;})">Play</button>
+=======
+        <button class="play-buton" @onclick="(() => {currentGameState = GameState.ChooseRoom;})">Play</button>
+    </div>
+}
+
+@if (currentGameState == GameState.ChooseRoom)
+{
+    <div class="lobby-browswer">
+        <label>Choose a lobby:</label>
+        <div class="rooms">
+            <button class="join-room" @onclick="(() => JoinRoom(1))">@roomStatuses[0]</button>
+            <button class="join-room" @onclick="(() => JoinRoom(2))">@roomStatuses[1]</button>
+            <button class="join-room" @onclick="(() => JoinRoom(3))">@roomStatuses[2]</button>
+            <button class="join-room" @onclick="(() => JoinRoom(4))">@roomStatuses[3]</button>
+            <button class="join-room" @onclick="(() => JoinRoom(5))">@roomStatuses[4]</button>
+        </div>
+>>>>>>> Stashed changes
     </div>
 }
 
@@ -92,6 +110,12 @@
     #region Connection Information
     private HubConnection? hubConnection;
     public bool IsConnected => hubConnection?.State == HubConnectionState.Connected;
+<<<<<<< Updated upstream
+=======
+    public string[] roomStatuses = new string[5] { "Join Room 1", "Join Room 2", "Join Room 3", "Join Room 4", "Join Room 5" };
+    private int room;
+    private bool player2Ready = false;
+>>>>>>> Stashed changes
     #endregion
     #region Player Information
     private List<string> moves = new List<string>();

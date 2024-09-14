@@ -109,4 +109,28 @@ a, .btn-link {
 .hit-preview{
     border: 3px solid red;
     background-color: lightblue;
+<<<<<<< Updated upstream
+=======
+}
+
+.column-headers {
+    display: flex;
+    margin-left: 0;
+}
+
+.column-headers p {
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    font-size: 25px;
+    margin-bottom: 0;
+}
+.join-room{
+    width: 100px;
+    height: 50px;
+    text-align: center;
+    font-size: 15px;
+    border: 2px solid black;
+    background-color: ghostwhite;
+>>>>>>> Stashed changes
 }
