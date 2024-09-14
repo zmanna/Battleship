@@ -12,7 +12,18 @@
             Enter your name:
             <input @bind="userInput" />
         </label>
-        <button class="play-buton" @onclick="(() => {currentGameState = GameState.Setup;})">Play</button>
+        <button class="play-buton" @onclick="(() => {currentGameState = GameState.ChooseRoom;})">Play</button>
+    </div>
+}
+
+@if (currentGameState == GameState.ChooseRoom)
+{
+    <div class="rooms">
+        <button class="join-room" @onclick="(() => JoinRoom(1))">@roomStatuses[0]</button>
+        <button class="join-room" @onclick="(() => JoinRoom(2))">@roomStatuses[1]</button>
+        <button class="join-room" @onclick="(() => JoinRoom(3))">@roomStatuses[2]</button>
+        <button class="join-room" @onclick="(() => JoinRoom(4))">@roomStatuses[3]</button>
+        <button class="join-room" @onclick="(() => JoinRoom(5))">@roomStatuses[4]</button>
     </div>
 }
 
@@ -21,13 +32,14 @@
     <div class="user-board">
         <h3>@(currentGameState == GameState.Setup ? "Place your ships!" : "Your Board")</h3>
 
-        <div>
-            <button @onclick="ToggleShipOrientation">@((isShipHorizontal ? "Horizontal" : "Vertical") + " Placement")</button>
+        <div class="column-headers">
+            <p /><p>1</p><p>2</p><p>3</p><p>4</p><p>5</p><p>6</p><p>7</p><p>8</p><p>9</p><p>10</p>
         </div>
 
         @for (int y = 0; y < 10; y++)
         {
             <div class="row">
+                <button class="letter" disabled>A</button>
                 @for (int x = 0; x < 10; x++)
                 {
                     int xCoord = x;//Capturing the x and Y coordinates so that their values at button creation are preserved.
@@ -41,18 +53,22 @@
             </div>
         }
 
+        <div>
+            <button @onclick="ToggleShipOrientation">@((isShipHorizontal ? "Horizontal" : "Vertical") + " Placement")</button>
+        </div>
+
         @if (currentGameState == GameState.Setup)
         {
-            <button class="square" @onclick="(() => { currentGameState = GameState.Playing; })">Start Game</button>
+            <button class="square" @onclick="SendReadyMessage">Start Game</button>
         }
     </div>
 }
 
-@if (currentGameState == GameState.Playing)
+@if (player2Ready)
 {
     <div class="player-boards">
         <div class="opponent-board">
-            <h3>Opponent's Board</h3>
+            <h3>@(opponent)'s Board</h3>
             @for (int y = 0; y < 10; y++)
             {
                 <div class="row">
@@ -71,7 +87,7 @@
 
         <!-- Display selected coordinates in a text box -->
         <div class="fire-control">
-            <button @onclick="Fire" disabled="@(currentGameState == GameState.Waiting || !coordinates.HasValue)">Fire</button>
+            <button @onclick="Fire" disabled="@(!isTurn || !coordinates.HasValue)">Fire</button>
 
             <!-- Display current selected coordinates -->
             <input type="text" value="@GetCoordinatesText()" readonly style="margin-left: 10px; width: 100px;" />
@@ -92,14 +108,18 @@
     #region Connection Information
     private HubConnection? hubConnection;
     public bool IsConnected => hubConnection?.State == HubConnectionState.Connected;
+    public string[] roomStatuses = new string[5];
+    private int room;
+    private bool player2Ready = false;
     #endregion
     #region Player Information
     private List<string> moves = new List<string>();
-    private string? userInput = "";
+    private string userInput = "";
     private (int x,int y)? coordinates;
     #endregion
     #region Boards
     // Game board tracking (10x10 grids for both players)
+    private string letters = "ABCDEFGHIJ";
     private bool[,] playerBoard = new bool[10, 10]; // Stores player's ships
     private bool[,] previewBoard = new bool[10, 10]; // Stores ship previews
     private bool[,] opponentShots = new bool[10, 10]; // Stores the opponents previous shots
@@ -108,7 +128,7 @@
     private bool[,] opponentDefaultBoard = new bool[10, 10]; // A default state for the opponents board when neither hit nor miss is recorded
     #endregion
     #region Game State Info
-    private enum GameState { Initial, Setup, Playing, Waiting, GameOver }
+    private enum GameState { Initial, ChooseRoom, Setup, Playing, Waiting, GameOver }
     private GameState currentGameState = GameState.Initial;
     private string currentPlayer = "";
     private string opponent = "";
@@ -117,6 +137,7 @@
     private bool isShipHorizontal = true; // To manage ship placement direction
     private int shipCount = 0;
     private int shipLimit = 3;
+    private bool isTurn = false;
     #endregion
     #endregion
 
@@ -236,7 +257,7 @@
         }
         if (shipCount >= shipLimit)
         {
-            currentGameState = GameState.Playing;
+            //currentGameState = GameState.Playing;
         }
     }
     #endregion
@@ -260,6 +281,14 @@
     #endregion
     #endregion
 
+    #region Accessor Functions
+    // Helper function to display the selected coordinates in the text box
+    private string GetCoordinatesText()
+    {
+        return coordinates.HasValue ? $"{coordinates.Value.x}, {coordinates.Value.y}" : "None";
+    }
+    #endregion
+
     #region Networking Functionality
     //  runs when client connects
     protected override async Task OnInitializedAsync()
@@ -270,14 +299,49 @@
             .WithAutomaticReconnect()
             .Build();
 
+        // when a new user has joined ANY of the rooms, update the page to show the new user in their room
+        hubConnection.On<List<List<string>>>("ReceiveRooms", (playersInRooms) =>
+        {
+            for (int i= 0; i<5; i++)
+            {
+                if (playersInRooms[i].Count == 0)
+                {
+                    roomStatuses[i] = $"Room {i+1} is empty";
+                }
+                if (playersInRooms[i].Count == 1)
+                {
+                    roomStatuses[i] = $"{playersInRooms[i][0]} is waiting";
+                }
+                if (playersInRooms[i].Count == 2 && playersInRooms[i].Contains(userInput))
+                {
+                    if (playersInRooms[i][0] == userInput) { isTurn = true; opponent = playersInRooms[i][1]; }
+                    else { isTurn = false; opponent = playersInRooms[i][0]; }
+                    currentGameState = GameState.Setup;
+                }
+                else if (playersInRooms[i].Count == 2)
+                {
+                    roomStatuses[i] = $"{playersInRooms[i][0]} and {playersInRooms[i][1]} are playing";
+                }
+            }
+            InvokeAsync(StateHasChanged);
+        });
+
+        hubConnection.On("ReceiveReadyMessage", () =>
+        {
+            player2Ready = true;
+            InvokeAsync(StateHasChanged);
+        });
+
+        // update the page to show the new user 
+
         // when a user and message are received from the connection...
         hubConnection.On<string, int ,int>("ReceiveCoordinates", (user, x, y) =>
         {
             opponentShots[x, y] = true;
-
-            hubConnection.SendAsync("SendHitMiss", playerBoard[x, y]);
+            hubConnection.SendAsync("SendHitMiss", room, playerBoard[x, y]);
             var formattedMessage = $"{user} fires at {x} , {y}";
             moves.Add(formattedMessage);
+            isTurn = true;
             InvokeAsync(StateHasChanged);
         });
 
@@ -285,33 +349,56 @@
         {
             string message;
 
-            if (wasHit)
+            if (coordinates is not null)
             {
-                message = $"Your Shot at {coordinates} was a hit!";
-                opponentBoard[coordinates.Value.x, coordinates.Value.y] = true;
-                opponentDefaultBoard[coordinates.Value.x, coordinates.Value.y] = true;
-                // Update board status for hit
+                if (wasHit)
+                {
+                    message = $"Your Shot at {coordinates} was a hit!";
+                    opponentBoard[coordinates.Value.x, coordinates.Value.y] = true;
+                    opponentDefaultBoard[coordinates.Value.x, coordinates.Value.y] = true;
+                    // Update board status for hit
+                }
+                else
+                {
+                    message = $" Your Shot at {coordinates} was a miss!";
+                    opponentDefaultBoard[coordinates.Value.x, coordinates.Value.y] = true;
+                }
+                // Check if all ships are sunk for game over condition
+                var formattedMessage = message;
+                moves.Add(formattedMessage);
+                InvokeAsync(StateHasChanged);
             }
-            else
-            {
-                message = $" Your Shot at {coordinates} was a miss!";
-                opponentDefaultBoard[coordinates.Value.x, coordinates.Value.y] = true;
-            }
-            // Check if all ships are sunk for game over condition
-            var formattedMessage = message;
-            moves.Add(formattedMessage);
-            InvokeAsync(StateHasChanged);
         });
 
         await hubConnection.StartAsync();
+    }
+
+    private async Task JoinRoom(int roomNum)
+    {
+        if (hubConnection is not null)
+        {
+            room = roomNum;
+            await hubConnection.SendAsync("JoinRoom", userInput, roomNum);
+        }
+    }
+
+    private async Task SendReadyMessage()
+    {
+        if (hubConnection is not null)
+        {
+            System.Diagnostics.Debug.WriteLine("Sending ready message to hub");
+            await hubConnection.SendAsync("SendReadyMessage", room);
+        }
     }
 
     private async Task Fire()
     {
         if (hubConnection is not null && coordinates.HasValue)
         {
-            await hubConnection.SendAsync("SendCoordinates", userInput, coordinates.Value.x, coordinates.Value.y);
+            await hubConnection.SendAsync("SendCoordinates", userInput, room, coordinates.Value.x, coordinates.Value.y);
             currentGameState = GameState.Playing;
+            isTurn = false;
+            //StateHasChanged();
         }
     }
 
@@ -323,14 +410,6 @@
         }
     }
 
-    #endregion
-
-    #region Accessor Functions
-    // Helper function to display the selected coordinates in the text box
-    private string GetCoordinatesText()
-    {
-        return coordinates.HasValue ? $"({coordinates})" : "None";
-    }
     #endregion
 //End C# code
 }
