@@ -96,7 +96,15 @@ a, .btn-link {
 }
 
 .row {
-    display: flex;
+    margin-left: 0;
+    white-space: nowrap;
+}
+
+.letter {
+    border: none;
+    background-color: white;
+    font-size: 25px;
+    color: black;
 }
 
 .ship {
@@ -106,11 +114,10 @@ a, .btn-link {
 .preview {
     background-color: #17392e !important; /* Different color for preview */
 }
+
 .hit-preview{
     border: 3px solid red;
     background-color: lightblue;
-<<<<<<< Updated upstream
-=======
 }
 
 .column-headers {
@@ -124,13 +131,4 @@ a, .btn-link {
     text-align: center;
     font-size: 25px;
     margin-bottom: 0;
-}
-.join-room{
-    width: 100px;
-    height: 50px;
-    text-align: center;
-    font-size: 15px;
-    border: 2px solid black;
-    background-color: ghostwhite;
->>>>>>> Stashed changes
 }

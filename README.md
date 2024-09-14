@@ -1,7 +1,7 @@
 Aryamann Zutshi
 John Mosely
 Paul Dykes
-Will Battey
+Willem Battey
 Spencer Addis
 
 Overall documentation of thought process through development can be located in 'documentation.txt'
