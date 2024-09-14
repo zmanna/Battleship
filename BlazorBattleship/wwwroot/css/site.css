@@ -106,3 +106,7 @@ a, .btn-link {
 .preview {
     background-color: #17392e !important; /* Different color for preview */
 }
+.hit-preview{
+    border: 3px solid red;
+    background-color: lightblue;
+}
