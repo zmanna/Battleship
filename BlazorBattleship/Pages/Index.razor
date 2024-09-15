@@ -328,6 +328,10 @@
     #region Opponent Board
     private string OpponentBoardInfo(int x, int y)
     {
+        if (coordinates.HasValue && coordinates.Value.x == x && coordinates.Value.y == y && !opponentDefaultBoard[x, y])
+        {
+            return "hit-preview";
+        }
         if (opponentDefaultBoard[x, y] && opponentBoard[x, y])
         {
             return "hit";
