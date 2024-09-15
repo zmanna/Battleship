@@ -14,6 +14,21 @@ a, .btn-link {
     color: #33FF33; /* Green link color */
 }
 
+
+/* Main game content area */
+.game-area {
+    padding: 20px;
+    transition: margin-left 0.3s ease; /* Smooth shifting when the sidebar opens */
+    margin-left: 0; /* Default with sidebar closed */
+    box-sizing: border-box;
+}
+
+.game-area.shifted {
+    margin-left: 250px; /* Shift when sidebar is open */
+}
+
+
+
 /*Non-Gridspace UI Elements*/
 input[type="text"], input[type="number"], input {
     background-color: #000000; /* Black background */
@@ -115,9 +130,74 @@ button:disabled, .play-buton:disabled, .join-room:disabled, .square:disabled, .l
     color: #33FF33;
 }
 
+
+
+/* Styling for top section displaying player and opponent names */
+.player-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #000; /* Black background */
+    color: #33FF33; /* Green text */
+    font-family: 'Courier New', Courier, monospace;
+    border-bottom: 2px solid #33FF33; /* Green border at the bottom */
+}
+
+    .player-info .player-name,
+    .player-info .opponent-name {
+        flex: 1;
+        text-align: center;
+    }
+
+/* Centering name entry box */
+.name-entry-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 100px); /* Full height minus space for top section */
+}
+
+.name-entry-box {
+    background-color: #000; /* Black background */
+    padding: 20px;
+    border: 2px solid #33FF33; /* Green border */
+    color: #33FF33; /* Green text */
+    text-align: center;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.name-entry-box input {
+    background-color: #000; /* Black background for input */
+    border: 2px solid #33FF33; /* Green border */
+    color: #33FF33; /* Green text */
+    font-family: 'Courier New', Courier, monospace;
+    padding: 10px;
+    margin-bottom: 10px;
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+.name-entry-box .play-button {
+    background-color: #000;
+    border: 2px solid #33FF33;
+    color: #33FF33;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+/* Button hover effect */
+.play-button:hover {
+    background-color: #33FF33;
+    color: #000;
+}
+
+
 .row button {
-    width: 50px;
-    height: 50px;
     background-color: #000000; /* Black background for game squares */
     border:1px solid black;
     color: #33FF33; /* Green text */
@@ -129,6 +209,43 @@ button:disabled, .play-buton:disabled, .join-room:disabled, .square:disabled, .l
 .user-board {
     width: 50%;
     float: left;
+    transition: width 0.3s ease;
+}
+
+.user-board .row button{
+    width: 50px;
+    height: 50px;
+}
+
+.user-board.minimized {
+    width: 25%;
+    height: 25%;
+}
+
+.user-board.minimized .row button{
+    width: 20px;
+    height: 20px;
+}
+
+.opponent-board{
+    width: 50%;
+    float: right;
+    transition: width 0.3s ease, margin-left 0.3s ease;
+}
+
+.opponent-board .row button{
+    width: 50px;
+    height: 50px;
+}
+
+.opponent-board.enlarged{
+    width: 70%;
+    margin-left: 15%;
+}
+
+.opponent-board.enlarged .row button{
+    width:70px;
+    height: 70px;
 }
 
 .hit {
@@ -143,6 +260,7 @@ button:disabled, .play-buton:disabled, .join-room:disabled, .square:disabled, .l
 .row {
     margin-left: 0;
     white-space: nowrap;
+    display: flex;
 }
 
 .letter {
@@ -206,9 +324,9 @@ button:disabled, .play-buton:disabled, .join-room:disabled, .square:disabled, .l
     overflow-y: auto;
 }
 
-    .sidebar.open {
-        left: 0;
-    }
+.sidebar.open {
+    left: 0;
+}
 
     .sidebar h3 {
         margin-top: 0;
@@ -235,17 +353,6 @@ button:disabled, .play-buton:disabled, .join-room:disabled, .square:disabled, .l
     margin-left: 0;
     box-sizing: border-box;
 }
-
-.page-content {
-    padding: 20px;
-    transition: margin-left 0.3s ease;
-    margin-left: 0;
-    box-sizing: border-box;
-}
-
-    .page-content.shifted {
-        margin-left: 250px;
-    }
 
 /* Toggle button for the sidebar */
 .toggle-button {
