@@ -425,6 +425,13 @@
             InvokeAsync(StateHasChanged);
         });
 
+        hubConnection.On<string>("PlayerLeft", (user) =>
+        {
+            moves.Add($"{user} has left the room.");
+            currentGameState = GameState.Initial; // Or return to the lobby
+            InvokeAsync(StateHasChanged);
+        });
+
         hubConnection.On<int>("ReceiveShipNum", (sl) =>
         {
             shipLimit = sl;
@@ -523,7 +530,15 @@
         if (hubConnection is not null)
         {
             await hubConnection.SendAsync("LeaveRoom", userInput, room);
-            currentGameState = GameState.ChooseRoom;
+
+            // Reset game state and room information locally
+            currentGameState = GameState.ChooseRoom; // Return to room selection screen
+            Reset(); // Clear game state (boards, ships, etc.)
+
+            room = 0; // Reset room number
+            isTurn = false; // Reset turn state
+            player2Ready = false; // Reset opponent readiness
+            opponent = ""; // Clear opponent name
         }
     }
 

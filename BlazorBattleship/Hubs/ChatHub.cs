@@ -57,6 +57,7 @@ namespace BlazorBattleship.Hubs
             playersInRooms[room - 1].Remove(user);
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"Room {room}");
             await Clients.All.SendAsync("ReceiveRooms", playersInRooms);
+            await Clients.Group($"Room {room}").SendAsync("PlayerLeft", user);
         }
 
         public async Task SendCoordinates(string user, int room, int x, int y)
