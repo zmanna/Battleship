@@ -137,9 +137,16 @@
     private string opponent = "";
     #endregion
     #region Ship Parameters
+    struct ship
+    {
+        (int x, int y) shipCoords;
+        int length;
+        int hp;
+    }
+    ship[] ships = new ship[shipLimit];
     private bool isShipHorizontal = true; // To manage ship placement direction
     private int shipCount = 0;
-    private int shipLimit = 3;
+    private static int shipLimit;
     private bool isTurn = false;
     #endregion
     #endregion
