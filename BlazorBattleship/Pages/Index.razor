@@ -1,10 +1,20 @@
 ﻿@page "/"
 @using Microsoft.AspNetCore.SignalR.Client
+@using BlazorBattleship.Shared
 @inject NavigationManager Navigation
 @implements IAsyncDisposable
 
-<PageTitle>Battleship</PageTitle>
+<PageTitle>Battle Ship</PageTitle>
 
+
+
+<div class="sidebar @(isSidebarOpen ? "open" : "")">
+    <Sidebar Ships="ships" />
+</div>
+
+<button class="toggle-button" @onclick="ToggleSidebar"></button>
+
+<div class="game-area @(isSidebarOpen ? "shifted" : "")">
 @if ((currentGameState == GameState.Initial) || userInput == "")
 {
     <div class="form-group">
@@ -32,7 +42,7 @@
     <div class="num-ships">
         <label>Enter number of ships:</label>
         <input @bind="shipLimit" />
-        <button @onclick="SendReadyMessage">Enter</button>
+        <button @onclick="SendShipNum">Enter</button>
     </div>
 }
 
@@ -40,6 +50,7 @@
 {
     <h1>@opponent is choosing the number of ships</h1>
 }
+
 
 @if (userInput != "" && (currentGameState == GameState.Setup || currentGameState == GameState.Playing))
 {
@@ -59,9 +70,10 @@
                     int xCoord = x;//Capturing the x and Y coordinates so that their values at button creation are preserved.
                     int yCoord = y;
                     <button class="@(GetCellClass(xCoord, yCoord))"
-                            @onclick='(() => { if(currentGameState == GameState.Setup) PlaceShip(xCoord, yCoord, isShipHorizontal);})'
-                            @onmouseover='(() => {if(currentGameState == GameState.Setup) ShowShipPreview(xCoord, yCoord, isShipHorizontal); })'
-                            @onmouseout='(() => { if(currentGameState == GameState.Setup) HideShipPreview(xCoord, yCoord, isShipHorizontal); })'></button>
+
+                            @onclick='(() => { if(currentGameState == GameState.Setup && (shipCount < shipLimit)) PlaceShip(xCoord, yCoord, isShipHorizontal);})'
+                            @onmouseover='(() => {if(currentGameState == GameState.Setup && (shipCount < shipLimit)) ShowShipPreview(xCoord, yCoord, isShipHorizontal); })'
+                            @onmouseout='(() => { if(currentGameState == GameState.Setup && (shipCount < shipLimit)) HideShipPreview(xCoord, yCoord, isShipHorizontal); })'></button>
                 }
             </div>
         }
@@ -83,27 +95,28 @@
 
 @if (player2Ready && room != 0)
 {
-    <div class="player-boards">
-        <div class="opponent-board">
-            <h3>@(opponent)'s Board</h3>
-            <div class="column-headers">
-                <p /><p>1</p><p>2</p><p>3</p><p>4</p><p>5</p><p>6</p><p>7</p><p>8</p><p>9</p><p>10</p>
-            </div>
-            @for (int y = 0; y < 10; y++)
-            {
-                <div class="row">
-                    <button class="letter" disabled>@letters[y]</button>
-                    @for (int x = 0; x < 10; x++)
-                    {
-                        int xCoord = x;//Capturing x and y coordinates so that their values at button creation are preserved.
-                        int yCoord = y;
-                        <button class="@(OpponentBoardInfo(xCoord, yCoord))" @onclick='(() => {
-                            SetCoordinates(xCoord, yCoord);
-                        })'></button>
-                    }
-                </div>
-            }
+    <div class="opponent-board">
+        <h3>@(opponent)'s Board</h3>
+        <div class="column-headers">
+            <p /><p>1</p><p>2</p><p>3</p><p>4</p><p>5</p><p>6</p><p>7</p><p>8</p><p>9</p><p>10</p>
         </div>
+        @for (int y = 0; y < 10; y++)
+        {
+            <div class="row">
+                <button class="letter" disabled>@letters[y]</button>
+                @for (int x = 0; x < 10; x++)
+                {
+                    int xCoord = x;//Capturing x and y coordinates so that their values at button creation are preserved.
+                    int yCoord = y;
+                    <button 
+                    class="@(OpponentBoardInfo(xCoord, yCoord))" 
+                    @onclick='(() => {
+                        SetCoordinates(xCoord, yCoord);
+                    })'></button>
+                }
+            </div>
+        }
+    </div>
 
         <!-- Display selected coordinates in a text box -->
         <div class="fire-control">
@@ -119,12 +132,14 @@
                 <li>@move</li>
             }
         </ul>
-    </div>
 }
-
+</div>
 
 @code {
     #region Declarations
+    #region Page Status
+    private bool isSidebarOpen = false;
+    #endregion
     #region Connection Information
     private HubConnection? hubConnection;
     public bool IsConnected => hubConnection?.State == HubConnectionState.Connected;
@@ -143,6 +158,7 @@
     private bool[,] playerBoard = new bool[10, 10]; // Stores player's ships
     private bool[,] previewBoard = new bool[10, 10]; // Stores ship previews
     private bool[,] opponentShots = new bool[10, 10]; // Stores the opponents previous shots
+    private int[,] shipHPs = new int[10, 10];
 
     private bool[,] opponentBoard = new bool[10, 10]; // Stores hits/misses on opponent
     private bool[,] opponentDefaultBoard = new bool[10, 10]; // A default state for the opponents board when neither hit nor miss is recorded
@@ -155,9 +171,10 @@
     private bool isPlayer1 = false;
     #endregion
     #region Ship Parameters
+    private Ship[]? ships;
     private bool isShipHorizontal = true; // To manage ship placement direction
     private int shipCount = 0;
-    private int shipLimit = 0;
+    private static int shipLimit;
     private bool isTurn = false;
     #endregion
     #endregion
@@ -181,7 +198,7 @@
         opponent = "";
         isShipHorizontal = true;
         shipCount = 0;
-        shipLimit = 3;
+        shipLimit = 0;
         isTurn = false;
         ResetBoard(playerBoard);
         ResetBoard(previewBoard);
@@ -202,6 +219,10 @@
     private void ToggleShipOrientation() //Toggle ship orientation boolean to track whether or not a placed ship is vertical or horizontal
     {
         isShipHorizontal = !isShipHorizontal;
+    }
+    private void ToggleSidebar()
+    {
+        isSidebarOpen = !isSidebarOpen; //Toggles sidebar visibility
     }
 
     #region Board Modification
@@ -286,13 +307,15 @@
     private void PlaceShip(int startX, int startY, bool isHorizontal)
     {
         int shipLength = shipCount + 1;
+        List<(int x, int y)> coords = new List<(int x, int y)>();
         if (isHorizontal)
         {
             if (startX + shipLength <= 10)
             {
                 for (int i = 0; i < shipLength; i++)
                 {
-                    playerBoard[startX + i, startY] = true;
+                    coords.Add((startX + i, startY));
+                    playerBoard[startX+i, startY] = true;
                 }
                 shipCount++;
             }
@@ -301,18 +324,25 @@
         {
             if (startY + shipLength <= 10)
             {
+
                 for (int i = 0; i < shipLength; i++)
                 {
-                    playerBoard[startX, startY + i] = true;
+                    coords.Add((startX, startY+i));
+                    playerBoard[startX, startY+i] = true;
                 }
+
                 shipCount++;
             }
         }
+
+        ships[shipCount - 1] = new Ship(shipCount, shipCount, $"Ship: {shipLength}", coords);
+
         if (shipCount >= shipLimit)
         {
             //currentGameState = GameState.Playing;
         }
     }
+
     #endregion
     #region Opponent Board
     private string OpponentBoardInfo(int x, int y)
@@ -321,7 +351,7 @@
         {
             return "hit-preview";
         }
-        if (opponentDefaultBoard[x, y] && opponentBoard[x, y])
+        else if (opponentDefaultBoard[x, y] && opponentBoard[x, y])
         {
             return "hit";
         }
@@ -395,11 +425,17 @@
             InvokeAsync(StateHasChanged);
         });
 
-        hubConnection.On<int>("ReceiveReadyMessage", (sl) =>
+        hubConnection.On<int>("ReceiveShipNum", (sl) =>
+        {
+            shipLimit = sl;
+            ships = new Ship[shipLimit];
+            currentGameState = GameState.Setup;
+            InvokeAsync(StateHasChanged);
+        });
+
+        hubConnection.On("ReceiveReadyMessage", () =>
         {
             player2Ready = true;
-            shipLimit = sl;
-            currentGameState = GameState.Setup;
             InvokeAsync(StateHasChanged);
         });
 
@@ -409,9 +445,37 @@
         hubConnection.On<string, int, int>("ReceiveCoordinates", (user, x, y) =>
         {
             opponentShots[x, y] = true;
+
+            Ship? hitShip = null;
+
+            foreach (var ship in ships)
+            {
+                if(ship.IsHit(x,y))
+                {
+                    hitShip = ship;
+                    break;
+                }
+            }
+
+            if (hitShip != null)
+            {
+                hitShip.DeductHP();
+
+                if (hitShip.IsDestroyed())
+                {
+                    var shipDestructionMessage = $"{hitShip.name} is destroyed!";
+                    moves.Add(shipDestructionMessage);
+                }
+                else
+                {
+                    var shipHitMessage = $"Hit on {hitShip.name}! {hitShip.name} has {hitShip.hp} hit points left.";
+                    moves.Add(shipHitMessage);
+                }
+            }
+
             hubConnection.SendAsync("SendHitMiss", room, playerBoard[x, y]);
-            var formattedMessage = $"{user} fires at {x} , {y}";
-            moves.Add(formattedMessage);
+            var shotMessage = $"{user} fires at {x} , {y}";
+            moves.Add(shotMessage);
             isTurn = true;
             InvokeAsync(StateHasChanged);
         });
@@ -420,7 +484,7 @@
         {
             string message;
 
-            if (coordinates is not null)
+            if (coordinates.HasValue)
             {
                 if (wasHit)
                 {
@@ -460,6 +524,15 @@
         {
             await hubConnection.SendAsync("LeaveRoom", userInput, room);
             currentGameState = GameState.ChooseRoom;
+        }
+    }
+
+    private async Task SendShipNum()
+    {
+        if (hubConnection is not null)
+        {
+            ships = new Ship[shipLimit];
+            await hubConnection.SendAsync("SendShipNum", room, shipLimit);
         }
     }
 
