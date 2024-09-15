@@ -1,13 +1,13 @@
 ﻿namespace BlazorBattleship.Shared
 {
-    public struct Ship
+    public class Ship
     {
-        public (int x, int y) shipCoords;
+        public List<(int x, int y)> shipCoords;
         public int length;
         public int hp;
         public string name;
 
-        public Ship(int length, int hp, string name, (int x, int y) coords)
+        public Ship(int length, int hp, string name, List<(int x, int y)> coords)
         {
             this.length = length;
             this.hp = hp;
@@ -18,6 +18,19 @@
         public bool IsDestroyed()
         {
             return hp <= 0;
+        }
+
+        public bool IsHit(int x, int y)
+        {
+            return shipCoords.Contains((x, y));
+        }
+
+        public void DeductHP()
+        {
+            if (hp > 0)
+            {
+                this.hp--;
+            }
         }
     }
 }

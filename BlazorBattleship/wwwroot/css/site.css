@@ -140,3 +140,86 @@ a, .btn-link {
     background-color: ghostwhite;
     border: 2px solid black;
 }
+
+/*Sidebar*/
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -250px; /* Initially hide the sidebar by placing it off-screen */
+    width: 250px;
+    height: 100%;
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-right: 1px solid #ccc;
+    z-index: 1000;
+    transition: left 0.3s ease; /* Add transition for sliding effect */
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.sidebar.open {
+    left: 0; /* When 'open' class is added, show the sidebar */
+}
+
+.sidebar h3 {
+    margin-top: 0;
+}
+
+.sidebar u1 {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar li {
+    margin-bottom: 10px;
+}
+
+.game-area{
+    padding: 20px;
+    transition: margin-left 0.3s ease;
+    margin-left: 0;
+    box-sizing: border-box;
+}
+
+.game-area.shifted{
+    margin-left: 250px;
+}
+
+/* Button to toggle sidebar */
+.toggle-button {
+    position: fixed;
+    top: 50%; /* Vertically center the button */
+    left: 0; /* Attach it to the left side of the screen */
+    transform: translateY(-50%); /* Move half of its width outside the screen */
+    width: 40px;
+    height: 80px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 0 40px 40px 0; /* Create a half-circle */
+    cursor: pointer;
+    z-index: 1001; /* Ensure the button is on top of everything */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: left 0.3s ease; /* Smooth transition when sidebar opens */
+}
+
+.sidebar.open ~ .toggle-button {
+    left: 250px; /* Align the button with the open sidebar */
+}
+
+.toggle-button::before {
+    content: '>';
+    font-size: 20px;
+    color: white;
+    transform: rotate(0deg); /* Arrow points to the right when closed */
+    transition: transform 0.6s ease;
+}
+
+.sidebar.open ~ .toggle-button::before {
+    
+    transform: rotate(-180deg); /* Arrow points to the left when open */
+}

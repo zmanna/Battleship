@@ -5,18 +5,27 @@
     public Ship[]? Ships { get; set; } // Receiving the ships array from the parent component
 }
 
-<div class="sidebar">
+<div class="sidebar-text">
     <h3>Your Ships</h3>
     <ul>
-    @if(Ships != null)
-    {
-        @foreach (var ship in Ships)
+        @if (Ships == null || Ships.Length == 0) // Check if Ships is null or empty
         {
-                <li>@ship.name: @ship.hp HP @if (ship.IsDestroyed())
-                {
-                    <strong>(Destroyed)</strong>
-                }</li>
+            <li>No ships available</li>
         }
-    }
+        else
+        {
+            @foreach (var ship in Ships)
+            {
+                @if (ship != null)
+                {
+                    <li>@ship.name: @ship.hp HP
+                        @if (ship.IsDestroyed())
+                        {
+                            <strong>(Destroyed)</strong>
+                        }
+                    </li>
+                }
+            }
+        }
     </ul>
 </div>
