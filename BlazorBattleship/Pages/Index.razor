@@ -32,7 +32,7 @@
     <div class="num-ships">
         <label>Enter number of ships:</label>
         <input @bind="shipLimit" />
-        <button @onclick="SendReadyMessage">Enter</button>
+        <button @onclick="SendShipNum">Enter</button>
     </div>
 }
 
@@ -59,9 +59,10 @@
                     int xCoord = x;//Capturing the x and Y coordinates so that their values at button creation are preserved.
                     int yCoord = y;
                     <button class="@(GetCellClass(xCoord, yCoord))"
-                            @onclick='(() => { if(currentGameState == GameState.Setup) PlaceShip(xCoord, yCoord, isShipHorizontal);})'
-                            @onmouseover='(() => {if(currentGameState == GameState.Setup) ShowShipPreview(xCoord, yCoord, isShipHorizontal); })'
-                            @onmouseout='(() => { if(currentGameState == GameState.Setup) HideShipPreview(xCoord, yCoord, isShipHorizontal); })'></button>
+
+                            @onclick='(() => { if(currentGameState == GameState.Setup && (shipCount < shipLimit)) PlaceShip(xCoord, yCoord, isShipHorizontal);})'
+                            @onmouseover='(() => {if(currentGameState == GameState.Setup && (shipCount < shipLimit)) ShowShipPreview(xCoord, yCoord, isShipHorizontal); })'
+                            @onmouseout='(() => { if(currentGameState == GameState.Setup && (shipCount < shipLimit)) HideShipPreview(xCoord, yCoord, isShipHorizontal); })'></button>
                 }
             </div>
         }
@@ -143,6 +144,7 @@
     private bool[,] playerBoard = new bool[10, 10]; // Stores player's ships
     private bool[,] previewBoard = new bool[10, 10]; // Stores ship previews
     private bool[,] opponentShots = new bool[10, 10]; // Stores the opponents previous shots
+    private int[,] shipHPs = new int[10, 10];
 
     private bool[,] opponentBoard = new bool[10, 10]; // Stores hits/misses on opponent
     private bool[,] opponentDefaultBoard = new bool[10, 10]; // A default state for the opponents board when neither hit nor miss is recorded
@@ -293,6 +295,7 @@
                 for (int i = 0; i < shipLength; i++)
                 {
                     playerBoard[startX + i, startY] = true;
+                    shipHPs[startX + i, startY] = shipLength;
                 }
                 shipCount++;
             }
@@ -313,6 +316,7 @@
             //currentGameState = GameState.Playing;
         }
     }
+
     #endregion
     #region Opponent Board
     private string OpponentBoardInfo(int x, int y)
@@ -391,11 +395,16 @@
             InvokeAsync(StateHasChanged);
         });
 
-        hubConnection.On<int>("ReceiveReadyMessage", (sl) =>
+        hubConnection.On<int>("ReceiveShipNum", (sl) =>
         {
-            player2Ready = true;
             shipLimit = sl;
             currentGameState = GameState.Setup;
+            InvokeAsync(StateHasChanged);
+        });
+
+        hubConnection.On("ReceiveReadyMessage", () =>
+        {
+            player2Ready = true;
             InvokeAsync(StateHasChanged);
         });
 
@@ -405,7 +414,7 @@
         hubConnection.On<string, int, int>("ReceiveCoordinates", (user, x, y) =>
         {
             opponentShots[x, y] = true;
-            hubConnection.SendAsync("SendHitMiss", room, playerBoard[x, y]);
+            hubConnection.SendAsync("SendHitMiss", room, playerBoard[x, y], shipHPs[x, y]);
             var formattedMessage = $"{user} fires at {x} , {y}";
             moves.Add(formattedMessage);
             isTurn = true;
@@ -456,6 +465,14 @@
         {
             await hubConnection.SendAsync("LeaveRoom", userInput, room);
             currentGameState = GameState.ChooseRoom;
+        }
+    }
+
+    private async Task SendShipNum()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.SendAsync("SendShipNum", room, shipLimit);
         }
     }
 

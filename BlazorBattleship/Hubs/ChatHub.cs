@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using System.Diagnostics;
 namespace BlazorBattleship.Hubs
 {
     public class ChatHub : Hub
@@ -6,9 +7,14 @@ namespace BlazorBattleship.Hubs
         //private static int[] roomCounts = { 0, 0, 0, 0, 0 };
         private static List<List<string>> playersInRooms = new List<List<string>>();
 
+        public async Task SendShipNum(int room, int shipLimit)
+        {
+            await Clients.Group($"Room {room}").SendAsync("ReceiveShipNum", shipLimit);
+        }
+
         public async Task SendReadyMessage(int room, int shipLimit)
         {
-            await Clients.OthersInGroup($"Room {room}").SendAsync("ReceiveReadyMessage", shipLimit);
+            await Clients.OthersInGroup($"Room {room}").SendAsync("ReceiveReadyMessage");
         }
 
         /*
@@ -57,9 +63,9 @@ namespace BlazorBattleship.Hubs
             await Clients.OthersInGroup($"Room {room}").SendAsync("ReceiveCoordinates", user, x, y);
         }
 
-        public async Task SendHitMiss(int room, bool wasHit)
+        public async Task SendHitMiss(int room, bool wasHit)//, bool wasSunk)
         {
-            await Clients.OthersInGroup($"Room {room}").SendAsync("ShotResponse", wasHit);
+            await Clients.OthersInGroup($"Room {room}").SendAsync("ShotResponse", wasHit);//, wasSunk);
         }
     }
 }
