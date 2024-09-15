@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using BlazorBattleship.Shared;
+using Microsoft.AspNetCore.SignalR;
 using System.Diagnostics;
 namespace BlazorBattleship.Hubs
 {

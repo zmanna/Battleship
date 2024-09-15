@@ -1,0 +1,22 @@
+﻿@using BlazorBattleship.Shared
+
+@code {
+    [Parameter]
+    public Ship[]? Ships { get; set; } // Receiving the ships array from the parent component
+}
+
+<div class="sidebar">
+    <h3>Your Ships</h3>
+    <ul>
+    @if(Ships != null)
+    {
+        @foreach (var ship in Ships)
+        {
+                <li>@ship.name: @ship.hp HP @if (ship.IsDestroyed())
+                {
+                    <strong>(Destroyed)</strong>
+                }</li>
+        }
+    }
+    </ul>
+</div>
