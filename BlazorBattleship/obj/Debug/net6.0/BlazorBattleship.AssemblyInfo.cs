@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BlazorBattleship")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ae7a351c2063cd3247f6122c79fabd6bd8ee785a")]
 [assembly: System.Reflection.AssemblyProductAttribute("BlazorBattleship")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BlazorBattleship")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

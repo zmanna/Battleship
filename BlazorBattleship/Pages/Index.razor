@@ -18,16 +18,27 @@
 
 @if (currentGameState == GameState.ChooseRoom)
 {
-    <div class="lobby-browser">
-        <label>Choose A Room: </label>
-        <div class="rooms">
-            <button class="join-room" @onclick="(() => JoinRoom(1))">@roomStatuses[0]</button>
-            <button class="join-room" @onclick="(() => JoinRoom(2))">@roomStatuses[1]</button>
-            <button class="join-room" @onclick="(() => JoinRoom(3))">@roomStatuses[2]</button>
-            <button class="join-room" @onclick="(() => JoinRoom(4))">@roomStatuses[3]</button>
-            <button class="join-room" @onclick="(() => JoinRoom(5))">@roomStatuses[4]</button>
-        </div>
+    <div class="rooms">
+        <button class="join-room" @onclick="(() => JoinRoom(1))">@roomStatuses[0]</button>
+        <button class="join-room" @onclick="(() => JoinRoom(2))">@roomStatuses[1]</button>
+        <button class="join-room" @onclick="(() => JoinRoom(3))">@roomStatuses[2]</button>
+        <button class="join-room" @onclick="(() => JoinRoom(4))">@roomStatuses[3]</button>
+        <button class="join-room" @onclick="(() => JoinRoom(5))">@roomStatuses[4]</button>
     </div>
+}
+
+@if (currentGameState == GameState.PickShips)
+{
+    <div class="num-ships">
+        <label>Enter number of ships:</label>
+        <input @bind="shipLimit" />
+        <button @onclick="SendShipNum">Enter</button>
+    </div>
+}
+
+@if (currentGameState == GameState.Waiting && shipLimit == 0)
+{
+    <h1>@opponent is choosing the number of ships</h1>
 }
 
 @if (userInput != "" && (currentGameState == GameState.Setup || currentGameState == GameState.Playing))
@@ -42,16 +53,16 @@
         @for (int y = 0; y < 10; y++)
         {
             <div class="row">
-                <button class="letter" disabled>A</button>
+                <button class="letter" disabled>@letters[y]</button>
                 @for (int x = 0; x < 10; x++)
                 {
                     int xCoord = x;//Capturing the x and Y coordinates so that their values at button creation are preserved.
                     int yCoord = y;
-                    <button class="@(GetCellClass(xCoord, yCoord))" 
-                    @onclick='(() => { if(currentGameState == GameState.Setup) PlaceShip(xCoord, yCoord, isShipHorizontal);})'
-                    @onmouseover='(() => {if(currentGameState == GameState.Setup) ShowShipPreview(xCoord, yCoord, isShipHorizontal); })'
-                    @onmouseout='(() => { if(currentGameState == GameState.Setup) HideShipPreview(xCoord, yCoord, isShipHorizontal); })'
-                    ></button>
+                    <button class="@(GetCellClass(xCoord, yCoord))"
+
+                            @onclick='(() => { if(currentGameState == GameState.Setup && (shipCount < shipLimit)) PlaceShip(xCoord, yCoord, isShipHorizontal);})'
+                            @onmouseover='(() => {if(currentGameState == GameState.Setup && (shipCount < shipLimit)) ShowShipPreview(xCoord, yCoord, isShipHorizontal); })'
+                            @onmouseout='(() => { if(currentGameState == GameState.Setup && (shipCount < shipLimit)) HideShipPreview(xCoord, yCoord, isShipHorizontal); })'></button>
                 }
             </div>
         }
@@ -64,43 +75,50 @@
         {
             <button class="square" @onclick="SendReadyMessage">Start Game</button>
         }
+
+        <div class="leave">
+            <button @onclick="LeaveRoom" disabled="@(room == 0)">Leave Game</button>
+        </div>
     </div>
 }
 
-@if (player2Ready)
+@if (player2Ready && room != 0)
 {
     <div class="player-boards">
         <div class="opponent-board">
             <h3>@(opponent)'s Board</h3>
+            <div class="column-headers">
+                <p /><p>1</p><p>2</p><p>3</p><p>4</p><p>5</p><p>6</p><p>7</p><p>8</p><p>9</p><p>10</p>
+            </div>
             @for (int y = 0; y < 10; y++)
             {
                 <div class="row">
+                    <button class="letter" disabled>@letters[y]</button>
                     @for (int x = 0; x < 10; x++)
                     {
                         int xCoord = x;//Capturing x and y coordinates so that their values at button creation are preserved.
                         int yCoord = y;
                         <button class="@(OpponentBoardInfo(xCoord, yCoord))" @onclick='(() => {
-                            SetCoordinates(xCoord, yCoord);                            
+                            SetCoordinates(xCoord, yCoord);
                         })'></button>
                     }
                 </div>
-                }
             }
         </div>
 
         <!-- Display selected coordinates in a text box -->
         <div class="fire-control">
-            <button @onclick="Fire" disabled="@(!isTurn || !coordinates.HasValue)">Fire</button>
+            <button @onclick="Fire" disabled="@(!isTurn || !coordinates.HasValue || opponentDefaultBoard[coordinates.Value.x, coordinates.Value.y])">Fire</button>
 
             <!-- Display current selected coordinates -->
             <input type="text" value="@GetCoordinatesText()" readonly style="margin-left: 10px; width: 100px;" />
         </div>
 
         <ul id="messagesList">
-        @foreach (var move in moves)
-        {
-            <li>@move</li>
-        }
+            @foreach (var move in moves)
+            {
+                <li>@move</li>
+            }
         </ul>
     </div>
 }
@@ -112,13 +130,13 @@
     private HubConnection? hubConnection;
     public bool IsConnected => hubConnection?.State == HubConnectionState.Connected;
     public string[] roomStatuses = new string[5] { "Join Room 1", "Join Room 2", "Join Room 3", "Join Room 4", "Join Room 5" };
-    private int room;
+    private int room = 0;
     private bool player2Ready = false;
     #endregion
     #region Player Information
     private List<string> moves = new List<string>();
     private string userInput = "";
-    private (int x,int y)? coordinates;
+    private (int x, int y)? coordinates = (0, 0);
     #endregion
     #region Boards
     // Game board tracking (10x10 grids for both players)
@@ -126,23 +144,57 @@
     private bool[,] playerBoard = new bool[10, 10]; // Stores player's ships
     private bool[,] previewBoard = new bool[10, 10]; // Stores ship previews
     private bool[,] opponentShots = new bool[10, 10]; // Stores the opponents previous shots
+    private int[,] shipHPs = new int[10, 10];
 
-    private bool[,] opponentBoard = new bool[10,10]; // Stores hits/misses on opponent
+    private bool[,] opponentBoard = new bool[10, 10]; // Stores hits/misses on opponent
     private bool[,] opponentDefaultBoard = new bool[10, 10]; // A default state for the opponents board when neither hit nor miss is recorded
     #endregion
     #region Game State Info
-    private enum GameState { Initial, ChooseRoom, Setup, Playing, Waiting, GameOver }
+    private enum GameState { Initial, ChooseRoom, PickShips, Setup, Playing, Waiting, GameOver }
     private GameState currentGameState = GameState.Initial;
     private string currentPlayer = "";
     private string opponent = "";
+    private bool isPlayer1 = false;
     #endregion
     #region Ship Parameters
     private bool isShipHorizontal = true; // To manage ship placement direction
     private int shipCount = 0;
-    private int shipLimit = 3;
+    private int shipLimit = 0;
     private bool isTurn = false;
     #endregion
     #endregion
+
+    private void ResetBoard(bool[,] board)
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            for (int j = 0; j < 10; j++)
+            {
+                board[i, j] = false;
+            }
+        }
+    }
+
+    private void Reset()
+    {
+        room = 0;
+        player2Ready = false;
+        coordinates = (0, 0);
+        opponent = "";
+        isShipHorizontal = true;
+        shipCount = 0;
+        shipLimit = 3;
+        isTurn = false;
+        ResetBoard(playerBoard);
+        ResetBoard(previewBoard);
+        ResetBoard(opponentBoard);
+        ResetBoard(opponentDefaultBoard);
+        ResetBoard(opponentShots);
+        while (moves.Count != 0)
+        {
+            moves.RemoveAt(moves.Count - 1);
+        }
+    }
 
     #region Modifier Functions
     private void SetCoordinates(int x, int y) //Sets the value of the coordinates tuple for later use
@@ -161,15 +213,15 @@
         /*Changes the type of grid space depending on whether or not a ship is currently there.
          * Effectively this allows for the preview to not override existing ships on the setup board.
         */
-        if (playerBoard[x, y] && !opponentShots[x,y])//If there is a ship on this space and the opponent has not shot here yet
+        if (playerBoard[x, y] && !opponentShots[x, y])//If there is a ship on this space and the opponent has not shot here yet
         {
             return "ship";//The space is of type ship
         }
-        else if(playerBoard[x, y] && opponentShots[x,y])//If there is a ship on this space, and the opponent has shot here
+        else if (playerBoard[x, y] && opponentShots[x, y])//If there is a ship on this space, and the opponent has shot here
         {
             return "hit";//The ship has been destroyed
         }
-        else if(!playerBoard[x, y] && opponentShots[x,y])//If the opponent has shot a tile that does not have a ship on it
+        else if (!playerBoard[x, y] && opponentShots[x, y])//If the opponent has shot a tile that does not have a ship on it
         {
             return "miss";//The opponent has missed
         }
@@ -243,6 +295,7 @@
                 for (int i = 0; i < shipLength; i++)
                 {
                     playerBoard[startX + i, startY] = true;
+                    shipHPs[startX + i, startY] = shipLength;
                 }
                 shipCount++;
             }
@@ -263,19 +316,16 @@
             //currentGameState = GameState.Playing;
         }
     }
+
     #endregion
     #region Opponent Board
     private string OpponentBoardInfo(int x, int y)
     {
-        if(coordinates.HasValue && coordinates.Value.x == x && coordinates.Value.y == y && !opponentDefaultBoard[x,y])
-        {
-            return "hit-preview";
-        }
-        else if(opponentDefaultBoard[x,y] && opponentBoard[x,y])
+        if (opponentDefaultBoard[x, y] && opponentBoard[x, y])
         {
             return "hit";
         }
-        else if(opponentDefaultBoard[x,y] && !opponentBoard[x,y])
+        else if (opponentDefaultBoard[x, y] && !opponentBoard[x, y])
         {
             return "miss";
         }
@@ -309,11 +359,12 @@
         // when a new user has joined ANY of the rooms, update the page to show the new user in their room
         hubConnection.On<List<List<string>>>("ReceiveRooms", (playersInRooms) =>
         {
-            for (int i= 0; i<5; i++)
+            for (int i = 0; i < 5; i++)
             {
+                //System.Diagnostics.Debug.WriteLine(playersInRooms[i - 1].Count);
                 if (playersInRooms[i].Count == 0)
                 {
-                    roomStatuses[i] = $"Room {i+1} is empty";
+                    roomStatuses[i] = $"Room {i + 1} is empty";
                 }
                 if (playersInRooms[i].Count == 1)
                 {
@@ -321,9 +372,20 @@
                 }
                 if (playersInRooms[i].Count == 2 && playersInRooms[i].Contains(userInput))
                 {
-                    if (playersInRooms[i][0] == userInput) { isTurn = true; opponent = playersInRooms[i][1]; }
-                    else { isTurn = false; opponent = playersInRooms[i][0]; }
-                    currentGameState = GameState.Setup;
+                    if (playersInRooms[i][0] == userInput)
+                    {
+                        isPlayer1 = true;
+                        isTurn = true;
+                        opponent = playersInRooms[i][1];
+                        currentGameState = GameState.PickShips;
+                    }
+                    else
+                    {
+                        isPlayer1 = false;
+                        isTurn = false;
+                        opponent = playersInRooms[i][0];
+                        currentGameState = GameState.Waiting;
+                    }
                 }
                 else if (playersInRooms[i].Count == 2)
                 {
@@ -333,19 +395,26 @@
             InvokeAsync(StateHasChanged);
         });
 
+        hubConnection.On<int>("ReceiveShipNum", (sl) =>
+        {
+            shipLimit = sl;
+            currentGameState = GameState.Setup;
+            InvokeAsync(StateHasChanged);
+        });
+
         hubConnection.On("ReceiveReadyMessage", () =>
         {
             player2Ready = true;
             InvokeAsync(StateHasChanged);
         });
 
-        // update the page to show the new user 
+        // update the page to show the new user
 
         // when a user and message are received from the connection...
-        hubConnection.On<string, int ,int>("ReceiveCoordinates", (user, x, y) =>
+        hubConnection.On<string, int, int>("ReceiveCoordinates", (user, x, y) =>
         {
             opponentShots[x, y] = true;
-            hubConnection.SendAsync("SendHitMiss", room, playerBoard[x, y]);
+            hubConnection.SendAsync("SendHitMiss", room, playerBoard[x, y], shipHPs[x, y]);
             var formattedMessage = $"{user} fires at {x} , {y}";
             moves.Add(formattedMessage);
             isTurn = true;
@@ -378,6 +447,7 @@
         });
 
         await hubConnection.StartAsync();
+        await hubConnection.SendAsync("GetRooms");
     }
 
     private async Task JoinRoom(int roomNum)
@@ -389,12 +459,29 @@
         }
     }
 
+    private async Task LeaveRoom()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.SendAsync("LeaveRoom", userInput, room);
+            currentGameState = GameState.ChooseRoom;
+        }
+    }
+
+    private async Task SendShipNum()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.SendAsync("SendShipNum", room, shipLimit);
+        }
+    }
+
     private async Task SendReadyMessage()
     {
         if (hubConnection is not null)
         {
-            System.Diagnostics.Debug.WriteLine("Sending ready message to hub");
-            await hubConnection.SendAsync("SendReadyMessage", room);
+            await hubConnection.SendAsync("SendReadyMessage", room, shipLimit);
+            currentGameState = GameState.Setup;
         }
     }
 
@@ -418,5 +505,5 @@
     }
 
     #endregion
-//End C# code
+    //End C# code
 }
