@@ -71,8 +71,6 @@ a, .btn-link {
 .user-board {
     width: 50%;
     float: left;
-<<<<<<< Updated upstream
-=======
 }
 
 .square {
@@ -133,5 +131,14 @@ a, .btn-link {
     text-align: center;
     font-size: 25px;
     margin-bottom: 0;
->>>>>>> Stashed changes
+
+}
+.join-room {
+    width: 100px;
+    height: 50px;
+    text-align: center;
+    font-size: 15px;
+    background-color: ghostwhite;
+    border: 2px solid black;
+
 }

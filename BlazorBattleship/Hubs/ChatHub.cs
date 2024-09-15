@@ -3,14 +3,63 @@ namespace BlazorBattleship.Hubs
 {
     public class ChatHub : Hub
     {
-        public Task SendCoordinates(string user, int i, int j)
+        //private static int[] roomCounts = { 0, 0, 0, 0, 0 };
+        private static List<List<string>> playersInRooms = new List<List<string>>();
+
+        public async Task SendReadyMessage(int room, int shipLimit)
         {
-            return Clients.Others.SendAsync("ReceiveCoordinates", user, i, j);
+            await Clients.OthersInGroup($"Room {room}").SendAsync("ReceiveReadyMessage", shipLimit);
         }
 
-        public Task SendHit(string user, string coordinates, bool wasHit)
+        /*
+        public async Task UpdateRooms()
         {
-            return Clients.All.SendAsync("ReceiveFireInformation", user, coordinates, wasHit);
+            for (int i = 0; i < 5; i++) {
+                playersInRooms.Add(new List<string>());
+            }
+            await Clients.All.SendAsync("ReceiveRooms", playersInRooms);
+        }
+        */
+
+        public async Task GetRooms()
+        {
+            while (playersInRooms.Count != 5)
+            {
+                playersInRooms.Add(new List<string>());
+            }
+            await Clients.All.SendAsync("ReceiveRooms", playersInRooms);
+        }
+
+        public async Task JoinRoom(string user, int room)
+        {
+            while (playersInRooms.Count != 5)
+            {
+                playersInRooms.Add(new List<string>());
+            }
+            if (playersInRooms[room - 1].Count < 2 && playersInRooms[room - 1].Contains(user) == false)
+            {
+                playersInRooms[room - 1].Add(user);
+            }
+
+            await Groups.AddToGroupAsync(Context.ConnectionId, $"Room {room}");
+            await Clients.All.SendAsync("ReceiveRooms", playersInRooms);
+        }
+
+        public async Task LeaveRoom(string user, int room)
+        {
+            playersInRooms[room - 1].Remove(user);
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"Room {room}");
+            await Clients.All.SendAsync("ReceiveRooms", playersInRooms);
+        }
+
+        public async Task SendCoordinates(string user, int room, int x, int y)
+        {
+            await Clients.OthersInGroup($"Room {room}").SendAsync("ReceiveCoordinates", user, x, y);
+        }
+
+        public async Task SendHitMiss(int room, bool wasHit)
+        {
+            await Clients.OthersInGroup($"Room {room}").SendAsync("ShotResponse", wasHit);
         }
     }
 }
