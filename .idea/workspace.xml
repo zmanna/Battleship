@@ -26,6 +26,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "aryamann",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
@@ -48,6 +49,7 @@
       <option name="presentableId" value="Default" />
       <updated>1726283436220</updated>
       <workItem from="1726283437541" duration="65000" />
+      <workItem from="1726362811767" duration="281000" />
     </task>
     <servers />
   </component>
