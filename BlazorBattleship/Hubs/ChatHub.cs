@@ -6,14 +6,25 @@ namespace BlazorBattleship.Hubs
         //private static int[] roomCounts = { 0, 0, 0, 0, 0 };
         private static List<List<string>> playersInRooms = new List<List<string>>();
 
-        public async Task SendReadyMessage(int room)
+        public async Task SendReadyMessage(int room, int shipLimit)
         {
-            await Clients.OthersInGroup($"Room {room}").SendAsync("ReceiveReadyMessage");
+            await Clients.OthersInGroup($"Room {room}").SendAsync("ReceiveReadyMessage", shipLimit);
         }
 
+        /*
         public async Task UpdateRooms()
         {
             for (int i = 0; i < 5; i++) {
+                playersInRooms.Add(new List<string>());
+            }
+            await Clients.All.SendAsync("ReceiveRooms", playersInRooms);
+        }
+        */
+
+        public async Task GetRooms()
+        {
+            while (playersInRooms.Count != 5)
+            {
                 playersInRooms.Add(new List<string>());
             }
             await Clients.All.SendAsync("ReceiveRooms", playersInRooms);
@@ -25,13 +36,19 @@ namespace BlazorBattleship.Hubs
             {
                 playersInRooms.Add(new List<string>());
             }
-
-            if (playersInRooms[room-1].Count < 2)
+            if (playersInRooms[room - 1].Count < 2 && playersInRooms[room - 1].Contains(user) == false)
             {
-                playersInRooms[room-1].Add(user);
+                playersInRooms[room - 1].Add(user);
             }
 
             await Groups.AddToGroupAsync(Context.ConnectionId, $"Room {room}");
+            await Clients.All.SendAsync("ReceiveRooms", playersInRooms);
+        }
+
+        public async Task LeaveRoom(string user, int room)
+        {
+            playersInRooms[room - 1].Remove(user);
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"Room {room}");
             await Clients.All.SendAsync("ReceiveRooms", playersInRooms);
         }
 
