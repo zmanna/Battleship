@@ -9,55 +9,53 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = BlazorBattleship
 build_property.RootNamespace = BlazorBattleship
-build_property.ProjectDir = C:\Users\johnm\OneDrive\Desktop\Visual-Studio-Code-Projects\Raiser's Edge Website\backend\Battleship\BlazorBattleship\
-build_property.EnableComHosting = 
-build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.ProjectDir = C:\Users\A Big Baby\Documents\GitHub\Battleship\BlazorBattleship\
 build_property.RazorLangVersion = 6.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\johnm\OneDrive\Desktop\Visual-Studio-Code-Projects\Raiser's Edge Website\backend\Battleship\BlazorBattleship
+build_property.MSBuildProjectDirectory = C:\Users\A Big Baby\Documents\GitHub\Battleship\BlazorBattleship
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Users/johnm/OneDrive/Desktop/Visual-Studio-Code-Projects/Raiser's Edge Website/backend/Battleship/BlazorBattleship/App.razor]
+[C:/Users/A Big Baby/Documents/GitHub/Battleship/BlazorBattleship/App.razor]
 build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/johnm/OneDrive/Desktop/Visual-Studio-Code-Projects/Raiser's Edge Website/backend/Battleship/BlazorBattleship/Pages/Counter.razor]
+[C:/Users/A Big Baby/Documents/GitHub/Battleship/BlazorBattleship/Pages/Counter.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ291bnRlci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/johnm/OneDrive/Desktop/Visual-Studio-Code-Projects/Raiser's Edge Website/backend/Battleship/BlazorBattleship/Pages/FetchData.razor]
+[C:/Users/A Big Baby/Documents/GitHub/Battleship/BlazorBattleship/Pages/FetchData.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRmV0Y2hEYXRhLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/johnm/OneDrive/Desktop/Visual-Studio-Code-Projects/Raiser's Edge Website/backend/Battleship/BlazorBattleship/Pages/Index.razor]
+[C:/Users/A Big Baby/Documents/GitHub/Battleship/BlazorBattleship/Pages/Index.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXgucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/johnm/OneDrive/Desktop/Visual-Studio-Code-Projects/Raiser's Edge Website/backend/Battleship/BlazorBattleship/Shared/SurveyPrompt.razor]
+[C:/Users/A Big Baby/Documents/GitHub/Battleship/BlazorBattleship/Shared/SurveyPrompt.razor]
 build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFN1cnZleVByb21wdC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/johnm/OneDrive/Desktop/Visual-Studio-Code-Projects/Raiser's Edge Website/backend/Battleship/BlazorBattleship/_Imports.razor]
+[C:/Users/A Big Baby/Documents/GitHub/Battleship/BlazorBattleship/_Imports.razor]
 build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/johnm/OneDrive/Desktop/Visual-Studio-Code-Projects/Raiser's Edge Website/backend/Battleship/BlazorBattleship/Shared/MainLayout.razor]
+[C:/Users/A Big Baby/Documents/GitHub/Battleship/BlazorBattleship/Shared/MainLayout.razor]
 build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE1haW5MYXlvdXQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = b-9ww2v6d7oi
 
-[C:/Users/johnm/OneDrive/Desktop/Visual-Studio-Code-Projects/Raiser's Edge Website/backend/Battleship/BlazorBattleship/Shared/NavMenu.razor]
+[C:/Users/A Big Baby/Documents/GitHub/Battleship/BlazorBattleship/Shared/NavMenu.razor]
 build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE5hdk1lbnUucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = b-yb6yrr4pif
 
-[C:/Users/johnm/OneDrive/Desktop/Visual-Studio-Code-Projects/Raiser's Edge Website/backend/Battleship/BlazorBattleship/Pages/Error.cshtml]
+[C:/Users/A Big Baby/Documents/GitHub/Battleship/BlazorBattleship/Pages/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXJyb3IuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/johnm/OneDrive/Desktop/Visual-Studio-Code-Projects/Raiser's Edge Website/backend/Battleship/BlazorBattleship/Pages/_Host.cshtml]
+[C:/Users/A Big Baby/Documents/GitHub/Battleship/BlazorBattleship/Pages/_Host.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX0hvc3QuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/johnm/OneDrive/Desktop/Visual-Studio-Code-Projects/Raiser's Edge Website/backend/Battleship/BlazorBattleship/Pages/_Layout.cshtml]
+[C:/Users/A Big Baby/Documents/GitHub/Battleship/BlazorBattleship/Pages/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX0xheW91dC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 

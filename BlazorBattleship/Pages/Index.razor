@@ -18,12 +18,15 @@
 
 @if (currentGameState == GameState.ChooseRoom)
 {
-    <div class="rooms">
-        <button class="join-room" @onclick="(() => JoinRoom(1))">@roomStatuses[0]</button>
-        <button class="join-room" @onclick="(() => JoinRoom(2))">@roomStatuses[1]</button>
-        <button class="join-room" @onclick="(() => JoinRoom(3))">@roomStatuses[2]</button>
-        <button class="join-room" @onclick="(() => JoinRoom(4))">@roomStatuses[3]</button>
-        <button class="join-room" @onclick="(() => JoinRoom(5))">@roomStatuses[4]</button>
+    <div class="lobby-browser">
+        <label>Choose A Room: </label>
+        <div class="rooms">
+            <button class="join-room" @onclick="(() => JoinRoom(1))">@roomStatuses[0]</button>
+            <button class="join-room" @onclick="(() => JoinRoom(2))">@roomStatuses[1]</button>
+            <button class="join-room" @onclick="(() => JoinRoom(3))">@roomStatuses[2]</button>
+            <button class="join-room" @onclick="(() => JoinRoom(4))">@roomStatuses[3]</button>
+            <button class="join-room" @onclick="(() => JoinRoom(5))">@roomStatuses[4]</button>
+        </div>
     </div>
 }
 
@@ -108,7 +111,7 @@
     #region Connection Information
     private HubConnection? hubConnection;
     public bool IsConnected => hubConnection?.State == HubConnectionState.Connected;
-    public string[] roomStatuses = new string[5];
+    public string[] roomStatuses = new string[5] { "Join Room 1", "Join Room 2", "Join Room 3", "Join Room 4", "Join Room 5" };
     private int room;
     private bool player2Ready = false;
     #endregion
@@ -264,7 +267,11 @@
     #region Opponent Board
     private string OpponentBoardInfo(int x, int y)
     {
-        if(opponentDefaultBoard[x,y] && opponentBoard[x,y])
+        if(coordinates.HasValue && coordinates.Value.x == x && coordinates.Value.y == y && !opponentDefaultBoard[x,y])
+        {
+            return "hit-preview";
+        }
+        else if(opponentDefaultBoard[x,y] && opponentBoard[x,y])
         {
             return "hit";
         }
