@@ -9,7 +9,7 @@
 
 
 <div class="sidebar @(isSidebarOpen ? "open" : "")">
-    <Sidebar Ships="ships" />
+    <Sidebar Ships="ships" HubConnection="hubConnection" UserName="@userName"/>
 </div>
 
 <button class="toggle-button" @onclick="ToggleSidebar"></button>
@@ -30,45 +30,48 @@
 
 
 @if ((currentGameState == GameState.Initial) || userName == "")
-{
-    <div class="name-entry-container">
-        <div class="name-entry-box">
-            <label>
-                Enter your name:
-                <input @bind="userName" />
-            </label>
-            <button class="play-buton" @onclick="(() => {currentGameState = GameState.ChooseRoom;})">Play</button>
+    {
+        <div class="name-entry-container">
+            <div class="name-entry-box">
+                <label>
+                    Enter your name:
+                </label>
+                <input @bind="userName" placeholder="Enter Your Name..." />
+                <button class="play-buton" @onclick="(() => {
+                    currentGameState = GameState.ChooseRoom;
+                    InvokeAsync(StateHasChanged);
+                })">Play</button>
+            </div>
         </div>
-    </div>
-}
+    }
 
-@if (currentGameState == GameState.ChooseRoom)
-{
-    <div class="rooms">
-        <button class="join-room" @onclick="(() => JoinRoom(1))">@roomStatuses[0]</button>
-        <button class="join-room" @onclick="(() => JoinRoom(2))">@roomStatuses[1]</button>
-        <button class="join-room" @onclick="(() => JoinRoom(3))">@roomStatuses[2]</button>
-        <button class="join-room" @onclick="(() => JoinRoom(4))">@roomStatuses[3]</button>
-        <button class="join-room" @onclick="(() => JoinRoom(5))">@roomStatuses[4]</button>
-    </div>
-}
+    @if (currentGameState == GameState.ChooseRoom)
+    {
+        <div class="rooms">
+            <button class="join-room" @onclick="(() => JoinRoom(1))">@roomStatuses[0]</button>
+            <button class="join-room" @onclick="(() => JoinRoom(2))">@roomStatuses[1]</button>
+            <button class="join-room" @onclick="(() => JoinRoom(3))">@roomStatuses[2]</button>
+            <button class="join-room" @onclick="(() => JoinRoom(4))">@roomStatuses[3]</button>
+            <button class="join-room" @onclick="(() => JoinRoom(5))">@roomStatuses[4]</button>
+        </div>
+    }
 
-@if (currentGameState == GameState.PickShips)
-{
-    <div class="num-ships">
-        <label>Enter number of ships:</label>
-        <input @bind="shipLimit" />
-        <button @onclick="SendShipNum">Enter</button>
-    </div>
-}
+    @if (currentGameState == GameState.PickShips)
+    {
+        <div class="num-ships">
+            <label>Enter number of ships:</label>
+            <input @bind="shipLimit" />
+            <button @onclick="SendShipNum">Enter</button>
+        </div>
+    }
 
-@if (currentGameState == GameState.Waiting && shipLimit == 0)
-{
-    <h1>@opponent is choosing the number of ships</h1>
-}
+    @if (currentGameState == GameState.Waiting && shipLimit == 0)
+    {
+        <h1>@opponent is choosing the number of ships</h1>
+    }
 
 
-@if (userName != "" && (currentGameState == GameState.Setup || currentGameState == GameState.Playing))
+    @if (userName != "" && (currentGameState == GameState.Setup || currentGameState == GameState.Playing || currentGameState  == GameState.Waiting))
 {
         <div class="user-board @(currentGameState == GameState.Playing ? "minimized" : "normal")">
         <h3>@(currentGameState == GameState.Setup ? "Place your ships!" : "Your Board")</h3>
@@ -584,7 +587,7 @@
             await hubConnection.SendAsync("SendCoordinates", userName, room, coordinates.Value.x, coordinates.Value.y);
             currentGameState = GameState.Waiting;
             isTurn = false;
-            //StateHasChanged();
+            await InvokeAsync(StateHasChanged);
         }
     }
 

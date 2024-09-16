@@ -69,5 +69,10 @@ namespace BlazorBattleship.Hubs
         {
             await Clients.OthersInGroup($"Room {room}").SendAsync("ShotResponse", wasHit);//, wasSunk);
         }
+
+        public async Task SendMessage(string userName, string message)
+        {
+            await Clients.All.SendAsync("ReceiveMessage", userName,  message);
+        }
     }
 }
