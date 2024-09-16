@@ -1,8 +1,39 @@
 ﻿@using BlazorBattleship.Shared
 
 @code {
-    [Parameter]
-    public Ship[]? Ships { get; set; } // Receiving the ships array from the parent component
+    #region Parameters
+    [Parameter] public Ship[]? Ships { get; set; } // Receiving the ships array from the parent component
+    [Parameter] public HubConnection? HubConnection { get; set; }
+    [Parameter] public string UserName { get; set; } = "";
+    #endregion
+    #region Declarations
+    #region Chat
+    public List<string> Messages = new List<string>();
+    private string newMessage = "";
+    #endregion
+    #endregion
+    #region Connection Functions
+    protected override async Task OnInitializedAsync()
+    {
+        if (HubConnection != null)
+        {
+            HubConnection.On<string, string>("ReceiveMessage", (user, message) =>
+            {
+                string formattedMessage = $"{DateTime.Now} | <span style='color: red; font-weight: bold;'>{user}</span>: {message}";
+                Messages.Insert(0, formattedMessage);
+                InvokeAsync(StateHasChanged);
+            });
+        }
+    }
+    private async Task SendMessage()
+    {
+        if (HubConnection is not null && !string.IsNullOrWhiteSpace(newMessage))
+        {
+            await HubConnection.SendAsync("SendMessage", UserName , newMessage);
+            newMessage = "";
+        }
+    }
+    #endregion
 }
 
 <div class="sidebar-text">

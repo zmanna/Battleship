@@ -1,9 +1,10 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
+
 html, body {
     font-family: 'Courier New', Courier, monospace;
-    background-color: #000000; 
-    color: #33FF33; 
+    background-color: #000000;
+    color: #33FF33;
 }
 
 h1:focus {
@@ -14,20 +15,43 @@ a, .btn-link {
     color: #33FF33; /* Green link color */
 }
 
+.player-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #000; /* Black background */
+    color: #33FF33; /* Green text */
+    font-family: 'Courier New', Courier, monospace;
+    border-bottom: 2px solid #33FF33; /* Green border at the bottom */
+    position: fixed; /* Make this section fixed at the top */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* Ensure it's above the rest of the content */
+}
+
+    .player-info h3 {
+        margin: 0;
+    }
+
+.player-name, .opponent-name {
+    flex: 1;
+    text-align: center;
+    font-size: calc(1.2vw + 1.2vh);
+}
 
 /* Main game content area */
 .game-area {
-    padding: 20px;
+    padding: 60px;
     transition: margin-left 0.3s ease; /* Smooth shifting when the sidebar opens */
     margin-left: 0; /* Default with sidebar closed */
     box-sizing: border-box;
 }
 
-.game-area.shifted {
-    margin-left: 250px; /* Shift when sidebar is open */
-}
-
-
+    .game-area.shifted {
+        margin-left: 250px; /* Shift when sidebar is open */
+    }
 
 /*Non-Gridspace UI Elements*/
 input[type="text"], input[type="number"], input {
@@ -41,14 +65,14 @@ input[type="text"], input[type="number"], input {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-input[type="text"]:focus, input[type="number"]:focus, input:focus {
-    outline: none; /* Remove default focus outline */
-    background-color: #111111; /* Slightly lighter black when focused */
-    color: #00FF00; /* Brighter green on focus */
-}
+    input[type="text"]:focus, input[type="number"]:focus, input:focus {
+        outline: none; /* Remove default focus outline */
+        background-color: #111111; /* Slightly lighter black when focused */
+        color: #00FF00; /* Brighter green on focus */
+    }
 
 /* Button styles */
-button, .play-buton, .join-room, .square, .leave button {
+button, .square, .play-button, .join-room {
     background-color: #000000; /* Black background */
     color: #33FF33; /* Green text */
     border: 2px solid #33FF33; /* Thick green border */
@@ -59,26 +83,223 @@ button, .play-buton, .join-room, .square, .leave button {
     transition: background-color 0.3s ease, color 0.3s ease;
     text-align: center;
     box-shadow: inset 0 0 10px rgba(51, 255, 51, 0.5); /* Glowing effect */
-    border-radius:10px; /*Rounded borders*/
+    border-radius: 10px;
 }
 
-    /* Hover and active states for buttons */
-button:hover, .play-buton:hover, .join-room:hover, .square:hover, .leave button:hover {
-    box-shadow: inset 0 0 40px rgba(51, 255, 51, 0.5); /* Glowing effect */
-    transition: 0.4s;
+    button:hover, .play-button:hover, .join-room:hover, .square:hover {
+        box-shadow: inset 0 0 40px rgba(51, 255, 51, 0.5); /* Glowing effect */
+        transition: 0.4s;
+    }
+
+    button:active, .play-button:active, .join-room:active, .square:active {
+        background-color: #00FF00; /* Brighter green when pressed */
+        color: #000000; /* Black text when pressed */
+    }
+
+    button:disabled, .play-button:disabled, .join-room:disabled, .square:disabled {
+        background-color: #333333; /* Dark gray background */
+        color: #777777; /* Light gray text */
+        border-color: #555555; /* Lighter gray border */
+        cursor: not-allowed;
+    }
+
+/* User and opponent boards */
+.user-board, .opponent-board {
+    display: block;
+    gap: 5px; /* Space between buttons */
 }
 
-button:active, .play-buton:active, .join-room:active, .square:active, .leave button:active {
-    background-color: #00FF00; /* Brighter green when pressed */
-    color: #000000; /* Black text when pressed */
+    .user-board.normal {
+        width: 50%;
+        height: 50%;
+    }
+
+    .user-board.minimized {
+        width: 15%;
+        height: 25%;
+    }
+
+.square {
+    background-color: #000000; /* Default black background for grid squares */
+    border: 2px solid black;
+    width: 100%;
+    aspect-ratio: 1; /* Makes the buttons square */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 2px;
 }
-   /* Button disabled state */
-button:disabled, .play-buton:disabled, .join-room:disabled, .square:disabled, .leave button:disabled {
-    background-color: #333333; /* Dark gray background */
-    color: #777777; /* Light gray text */
-    border-color: #555555; /* Lighter gray border */
-    cursor: not-allowed; /* Disabled cursor */
+
+/* Row and column headers */
+.row {
+    display: grid;
+    grid-template-columns: auto repeat(10, 1fr); /* First column for row letters, rest for buttons */
+    gap: 5px;
 }
+
+.letter {
+    text-align: center;
+    font-size: calc(1.5vw); /* Responsive text size */
+    color: #33FF33;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.column-headers {
+    display: grid;
+    grid-template-columns: auto repeat(10, 1fr);
+    margin-bottom: 10px;
+}
+
+    .column-headers p {
+        text-align: center;
+        font-size: calc(1.5vw);
+        color: #33FF33;
+        margin: 0;
+    }
+
+/* Cell states: hit, miss, ship, preview */
+.hit {
+    background-color: red !important; /* Red for hits */
+}
+
+.miss {
+    background-color: gray !important; /* Gray for misses */
+}
+
+.ship {
+    background-color: mediumslateblue !important; /* Color for ships */
+}
+
+.preview {
+    background-color: lawngreen !important; /* Different color for preview */
+}
+
+.hit-preview {
+    border: 4px outset #aa1010 !important; /* Glowing red border for hit preview */
+    box-shadow: inset 0 0 10px red !important;
+    background-color: black;
+}
+
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -250px; /* Initially hide the sidebar */
+    width: 250px;
+    height: 100%;
+    background-color: #000000;
+    color: #33FF33;
+    padding: 20px;
+    border-right: 3px outset #33FF33;
+    z-index: 1000;
+    transition: left 0.4s ease;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+    .sidebar.open {
+        left: 0;
+    }
+
+    .sidebar h3 {
+        margin-top: 0;
+        color: #33FF33;
+        text-align: center;
+    }
+
+    .sidebar ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .sidebar li {
+        margin-bottom: 10px;
+        color: #33FF33;
+        font-size: 18px;
+    }
+
+/* Sidebar toggle button */
+.toggle-button {
+    position: fixed;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 80px;
+    background-color: #000000;
+    color: #33FF33;
+    border: none;
+    border-radius: 0 40px 40px 0;
+    cursor: pointer;
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: left 0.2s ease;
+    border: 4px inset green;
+}
+
+    .toggle-button:hover {
+        background-color: darkslategrey;
+    }
+
+.sidebar.open ~ .toggle-button {
+    left: 250px;
+}
+
+.toggle-button::before {
+    content: '>';
+    font-size: 20px;
+    color: #33FF33;
+    transition: transform 0.2s ease;
+}
+
+.sidebar.open ~ .toggle-button::before {
+    transform: rotate(-180deg);
+}
+
+/* Game over screen */
+.game-over-screen {
+    text-align: center;
+    padding: 50px;
+    background-color: rgba(0, 0, 0, 0.9);
+    color: #33FF33;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 9999;
+}
+
+    .game-over-screen h1 {
+        font-size: 3rem;
+        margin-bottom: 20px;
+    }
+
+    .game-over-screen p {
+        font-size: 1.5rem;
+        margin-bottom: 30px;
+    }
+
+    .game-over-screen button {
+        font-size: 1.5rem;
+        padding: 10px 20px;
+        cursor: pointer;
+        background-color: #000000;
+        color: #33FF33;
+        border: 2px solid #33FF33;
+        font-family: 'Courier New', Courier, monospace;
+    }
+
+/*Blazor Stuff*/
 
 
 .btn-primary {
@@ -118,12 +339,12 @@ button:disabled, .play-buton:disabled, .join-room:disabled, .square:disabled, .l
     z-index: 1000;
 }
 
-#blazor-error-ui .dismiss {
-    cursor: pointer;
-    position: absolute;
-    right: 0.75rem;
-    top: 0.5rem;
-}
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+    }
 
 .blazor-error-boundary {
     background-color: #000000;

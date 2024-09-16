@@ -30,70 +30,78 @@
 
 
 @if ((currentGameState == GameState.Initial) || userName == "")
-{
-    <div class="name-entry-container">
-        <div class="name-entry-box">
-            <label>
-                Enter your name:
-                <input @bind="userName" />
-            </label>
-            <button class="play-buton" @onclick="(() => {currentGameState = GameState.ChooseRoom;})">Play</button>
-        </div>
-    </div>
-}
-
-@if (currentGameState == GameState.ChooseRoom)
-{
-    <div class="rooms">
-        <button class="join-room" @onclick="(() => JoinRoom(1))">@roomStatuses[0]</button>
-        <button class="join-room" @onclick="(() => JoinRoom(2))">@roomStatuses[1]</button>
-        <button class="join-room" @onclick="(() => JoinRoom(3))">@roomStatuses[2]</button>
-        <button class="join-room" @onclick="(() => JoinRoom(4))">@roomStatuses[3]</button>
-        <button class="join-room" @onclick="(() => JoinRoom(5))">@roomStatuses[4]</button>
-    </div>
-}
-
-@if (currentGameState == GameState.PickShips)
-{
-    <div class="num-ships">
-        <label>Enter number of ships:</label>
-        <input @bind="shipLimit" />
-        <button @onclick="SendShipNum">Enter</button>
-    </div>
-}
-
-@if (currentGameState == GameState.Waiting && shipLimit == 0)
-{
-    <h1>@opponent is choosing the number of ships</h1>
-}
-
-
-@if (userName != "" && (currentGameState == GameState.Setup || currentGameState == GameState.Playing))
-{
-        <div class="user-board @(currentGameState == GameState.Playing ? "minimized" : "")">
-        <h3>@(currentGameState == GameState.Setup ? "Place your ships!" : "Your Board")</h3>
-
-        <div class="column-headers">
-            <p /><p>1</p><p>2</p><p>3</p><p>4</p><p>5</p><p>6</p><p>7</p><p>8</p><p>9</p><p>10</p>
-        </div>
-
-        @for (int y = 0; y < 10; y++)
-        {
-            <div class="row">
-                <button class="letter" disabled>@letters[y]</button>
-                @for (int x = 0; x < 10; x++)
-                {
-                    int xCoord = x;//Capturing the x and Y coordinates so that their values at button creation are preserved.
-                    int yCoord = y;
-                    <button class="@(GetCellClass(xCoord, yCoord))"
-
-                            @onclick='(() => { if(currentGameState == GameState.Setup && (shipCount < shipLimit)) PlaceShip(xCoord, yCoord, isShipHorizontal);})'
-                            @onmouseover='(() => {if(currentGameState == GameState.Setup && (shipCount < shipLimit)) ShowShipPreview(xCoord, yCoord, isShipHorizontal); })'
-                            @onmouseout='(() => { if(currentGameState == GameState.Setup && (shipCount < shipLimit)) HideShipPreview(xCoord, yCoord, isShipHorizontal); })'></button>
-                }
+    {
+        <div class="name-entry-container">
+            <div class="name-entry-box">
+                <label>
+                    Enter your name:
+                </label>
+                <input @bind="userName" placeholder="Enter Your Name..." />
+                <button class="play-buton" @onclick="(() => {
+                    currentGameState = GameState.ChooseRoom;
+                    InvokeAsync(StateHasChanged);
+                })">Play</button>
             </div>
-        }
+        </div>
+    }
 
+    @if (currentGameState == GameState.ChooseRoom)
+    {
+        <div class="rooms">
+            <button class="join-room" @onclick="(() => JoinRoom(1))">@roomStatuses[0]</button>
+            <button class="join-room" @onclick="(() => JoinRoom(2))">@roomStatuses[1]</button>
+            <button class="join-room" @onclick="(() => JoinRoom(3))">@roomStatuses[2]</button>
+            <button class="join-room" @onclick="(() => JoinRoom(4))">@roomStatuses[3]</button>
+            <button class="join-room" @onclick="(() => JoinRoom(5))">@roomStatuses[4]</button>
+        </div>
+    }
+
+    @if (currentGameState == GameState.PickShips)
+    {
+        <div class="num-ships">
+            <label>Enter number of ships:</label>
+            <input @bind="shipLimit" />
+            <button @onclick="SendShipNum">Enter</button>
+        </div>
+    }
+
+    @if (currentGameState == GameState.Waiting && shipLimit == 0)
+    {
+        <h1>@opponent is choosing the number of ships</h1>
+    }
+
+    @if (userName != "" && (currentGameState == GameState.Setup || currentGameState == GameState.Playing || currentGameState  == GameState.Waiting))
+{
+    // display either player is to be placing ships or "your board" if ships have been placed
+        <div class="user-board @(currentGameState == GameState.Playing ? "minimized" : "normal")">
+            <h3>@(currentGameState == GameState.Setup ? "Place your ships!" : "Your Board")</h3>
+
+            <!-- Column Headers (numbers 1-10) -->
+            <div class="column-headers">
+                <div class="empty-space"></div> <!-- Empty space for row header -->
+                <p>1</p><p>2</p><p>3</p><p>4</p><p>5</p><p>6</p><p>7</p><p>8</p><p>9</p><p>10</p>
+            </div>
+
+            <!-- Board layout (row headers + buttons) -->
+            @for (int y = 0; y < 10; y++)
+            {
+                <div class="row">
+                    <div class="letter">@letters[y]</div> <!-- Row header (letter) -->
+                    @for (int x = 0; x < 10; x++)
+                    {
+                        int xCoord = x;
+                        int yCoord = y;
+                        <button class="square @(GetCellClass(xCoord, yCoord))"
+                    @onclick='(() => { if(currentGameState == GameState.Setup && (shipCount < shipLimit)) PlaceShip(xCoord, yCoord, isShipHorizontal); })'
+                    @onmouseover='(() => { if(currentGameState == GameState.Setup && (shipCount < shipLimit)) ShowShipPreview(xCoord, yCoord, isShipHorizontal); })'
+                    @onmouseout='(() => { if(currentGameState == GameState.Setup && (shipCount < shipLimit)) HideShipPreview(xCoord, yCoord, isShipHorizontal); })'></button>
+                    }
+                </div>
+            }
+        </div>
+
+    <!--Functional buttons-->
+        @* button to toggle ship orientation (vertical/horizontal) *@
         <div>
             <button @onclick="ToggleShipOrientation">@((isShipHorizontal ? "Horizontal" : "Vertical") + " Placement")</button>
         </div>
@@ -106,7 +114,6 @@
         <div class="leave">
             <button @onclick="LeaveRoom" disabled="@(room == 0)">Leave Game</button>
         </div>
-    </div>
 }
 
 @if (player2Ready && room != 0)
