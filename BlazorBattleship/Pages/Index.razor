@@ -105,11 +105,13 @@ Creation Date: September 10, 2024
         </div>
     }
 
+    <div class="boards-wrapper">
     <!-- display main board -->
     @if (userName != "" && (currentGameState == GameState.Setup || currentGameState == GameState.Playing || currentGameState  == GameState.Waiting))
 {
     // display either player is to be placing ships or "your board" if ships have been placed
-        <div class="user-board @(currentGameState == GameState.Playing ? "minimized" : "normal")" hidden="@(currentGameState != GameState.Setup && currentGameState != GameState.Playing)">
+
+        <div class="user-board @(currentGameState == GameState.Playing ? "minimized" : "")" hidden="@(currentGameState != GameState.Setup && currentGameState != GameState.Playing && currentGameState != GameState.Waiting)">
         <h3>@(currentGameState == GameState.Setup ? "Place your ships!" : "Your Board")</h3>
 
         <!-- display column names -->
@@ -196,7 +198,7 @@ Creation Date: September 10, 2024
         </ul>
 }
 </div>
-
+</div>
 @code {
     #region Declarations
     #region Page Status

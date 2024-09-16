@@ -17,7 +17,7 @@ a, .btn-link {
 
 /* Main game content area */
 .game-area {
-    padding: 20px;
+    padding: 60px;
     transition: margin-left 0.3s ease; /* Smooth shifting when the sidebar opens */
     margin-left: 0; /* Default with sidebar closed */
     box-sizing: border-box;
@@ -320,35 +320,24 @@ button:disabled, .play-buton:disabled, .join-room:disabled, .square:disabled, .l
     border-radius: 2px;
 }
 
-.user-board {
+.boards-wrapper {
     display: flex;
-    flex-direction: column;
-    width: 50%;
-    float: left;
-    margin-top: 30px;
-    margin-left: 40px;
-    min-width: 540px;
-    transition: width 0.3s ease;
+    justify-content: space-between; /* Space between the boards */
+    align-items: flex-start; /* Aligns the boards at the top */
+    gap: 20px; /* Space between the boards */
+    padding: 20px;
 }
 
-.user-board .row button{
-    width: 50px;
-    height: 50px;
+.user-board {
+    flex: 1;
+    transition: flex 0.5s ease, max-width 0.5s ease;
+    max-width: 25%;
 }
-
 .user-board.normal{
-    width: 50%;
-    height: 50%;
+    flex: 1;
 }
-
-.user-board.minimized {
-    width: 15%;
-    height: 25%;
-}
-
-.user-board.minimized .row button{
-    width: 20px;
-    height: 20px;
+.user-board.minimized{
+    flex: 1;
 }
 
 .user-buttons {
@@ -361,14 +350,10 @@ button:disabled, .play-buton:disabled, .join-room:disabled, .square:disabled, .l
 }
 
 .opponent-board {
-    margin-top: 30px;
-    margin-left: 40px;
-    margin-right: 400px;
-    display: flex;
-    flex-direction: column;
-    width: 30%;
-    min-width: 540px;
-    transition: width 0.3s ease, margin-left 0.3s ease;
+    flex: 1;
+    max-width: 45%;
+    height: auto;
+    transition: flex 0.5s ease, max-width 0.5s ease;
 }
 
 .opponent-board .row button{
@@ -377,8 +362,9 @@ button:disabled, .play-buton:disabled, .join-room:disabled, .square:disabled, .l
 }
 
 .opponent-board.enlarged{
-    width: 50%;
-    margin-left: 15%;
+    flex: 4;
+    max-width: 60%;
+    height: auto;
 }
 
 .opponent-board.enlarged .row button{
@@ -396,17 +382,19 @@ button:disabled, .play-buton:disabled, .join-room:disabled, .square:disabled, .l
 
 .hit {
     background-color: red !important; /* Red for hits */
+    padding: 10px 20px;
 }
 
 
 .miss {
     background-color: gray !important; /* Gray for misses */
+    padding: 10px 20px;
 }
 
 .row {
-    margin-left: 0;
-    white-space: nowrap;
-    display: flex;
+    display: grid;
+    grid-template-columns: auto repeat(10, 1fr);
+    gap: 5px;
 }
 
 .letter {
@@ -418,10 +406,12 @@ button:disabled, .play-buton:disabled, .join-room:disabled, .square:disabled, .l
 }
 .ship {
     background-color: mediumslateblue !important; /* You can change this color if needed */
+    padding: 10px 20px;
 }
 
 .preview {
     background-color: lawngreen !important; /* Different color for preview */
+    padding: 10px 20px;
 }
 
 .hit-preview {
