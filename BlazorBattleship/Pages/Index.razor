@@ -26,6 +26,9 @@ Creation Date: September 10, 2024
 
 <!-- display your and opponents name at top of screen -->
 <div class="game-area @(isSidebarOpen ? "shifted" : "")">
+    <div class="leave">
+        <button @onclick="LeaveRoom" hidden="@(room == 0)">Leave Game</button>
+    </div>
 
     <div class="player-info">
 
@@ -40,9 +43,18 @@ Creation Date: September 10, 2024
     </div>
 
 <!-- initial game state when page is launched -->
-@if ((currentGameState == GameState.Initial) || userName == "")
+@if ((currentGameState == GameState.Initial || userName == "") && room == 0)
     {
         <div class="name-entry-container">
+            <div class="welcome-header">
+                <h2>Welcome to Battleship</h2>
+            </div>
+            <div class="friends-header">
+                <h2><span>Play</span> with Your Friends</h2>
+            </div>
+            <div class="enemies-header">
+                <h2><span>Destroy</span> Your Enemies</h2>
+            </div>
             <div class="name-entry-box">
                 <label>
                     Enter your name:
@@ -67,6 +79,13 @@ Creation Date: September 10, 2024
         </div>
     }
 
+    @if (currentGameState == GameState.InLobby)
+    {
+        <div class="waiting-for-opponent">
+            <h1>Waiting for Opponent to Join<span class="first">.</span><span class="second">.</span><span class="third">.</span></h1>
+        </div>
+    }
+
     @if (currentGameState == GameState.PickShips)
     {
         <div class="num-ships">
@@ -78,14 +97,16 @@ Creation Date: September 10, 2024
 
     @if (currentGameState == GameState.Waiting && shipLimit == 0)
     {
-        <h1>@opponent is choosing the number of ships</h1>
+        <div class="waiting-for-ship-num">
+            <p>@opponent is choosing the number of ships<span class="first">.</span><span class="second">.</span><span class="third">.</span></p>
+        </div>
     }
 
 
     @if (userName != "" && (currentGameState == GameState.Setup || currentGameState == GameState.Playing || currentGameState  == GameState.Waiting))
 {
     // display either player is to be placing ships or "your board" if ships have been placed
-    <div class="user-board @(currentGameState == GameState.Playing ? "minimized" : "normal")">
+        <div class="user-board @(currentGameState == GameState.Playing ? "minimized" : "normal")" hidden="@(currentGameState != GameState.Setup && currentGameState != GameState.Playing)">
         <h3>@(currentGameState == GameState.Setup ? "Place your ships!" : "Your Board")</h3>
 
         <!-- display column names -->
@@ -102,7 +123,6 @@ Creation Date: September 10, 2024
                     int xCoord = x;//Capturing the x and Y coordinates so that their values at button creation are preserved.
                     int yCoord = y;
                     <button class="@(GetCellClass(xCoord, yCoord))"
-                            @* actions to place ships: on click places ship and hovering previews ship placement *@
                             @onclick='(() => { if(currentGameState == GameState.Setup && (shipCount < shipLimit)) PlaceShip(xCoord, yCoord, isShipHorizontal);})'
                             @onmouseover='(() => {if(currentGameState == GameState.Setup && (shipCount < shipLimit)) ShowShipPreview(xCoord, yCoord, isShipHorizontal); })'
                             @onmouseout='(() => { if(currentGameState == GameState.Setup && (shipCount < shipLimit)) HideShipPreview(xCoord, yCoord, isShipHorizontal); })'></button>
@@ -111,19 +131,18 @@ Creation Date: September 10, 2024
         }
 
         @* button to toggle ship orientation (vertical/horizontal) *@
-        <div>
-            <button @onclick="ToggleShipOrientation">@((isShipHorizontal ? "Horizontal" : "Vertical") + " Placement")</button>
-        </div>
+        <div class="user-buttons">
+            <div>
+                <button @onclick="ToggleShipOrientation">@((isShipHorizontal ? "Horizontal" : "Vertical") + " Placement")</button>
+            </div>
 
-        @* button to start game *@
-        @if (currentGameState == GameState.Setup)
-        {
-            <button class="square" @onclick="SendReadyMessage">Start Game</button>
-        }
+            @* button to start game *@
+            @if (currentGameState == GameState.Setup)
+            {
+                <button class="square" @onclick="SendReadyMessage">Start Game</button>
+            }
 
-        @* button to leave game *@
-        <div class="leave">
-            <button @onclick="LeaveRoom" disabled="@(room == 0)">Leave Game</button>
+            @* button to leave game *@
         </div>
     </div>
 }
@@ -463,7 +482,7 @@ Creation Date: September 10, 2024
         hubConnection.On<string>("PlayerLeft", (user) =>
         {
             moves.Add($"{user} has left the room.");
-            currentGameState = GameState.Initial; // Or return to the lobby
+            currentGameState = GameState.InLobby; // Or return to the lobby
             InvokeAsync(StateHasChanged);
         });
 
@@ -490,12 +509,16 @@ Creation Date: September 10, 2024
             currentGameState = GameState.Playing;
             Ship? hitShip = null;
 
-            foreach (var ship in ships)
+            if (ships is not null)
             {
-                if(ship.IsHit(x,y))
+                foreach (var ship in ships)
                 {
-                    hitShip = ship;
-                    break;
+
+                    if (ship is not null && ship.IsHit(x, y))
+                    {
+                        hitShip = ship;
+                        break;
+                    }
                 }
             }
 

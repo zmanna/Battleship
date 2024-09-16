@@ -62,6 +62,12 @@ button, .play-buton, .join-room, .square, .leave button {
     border-radius:10px; /*Rounded borders*/
 }
 
+.rooms {
+    display: flex;
+    margin-left: 150px;
+    margin-top: 100px;
+}
+
     /* Hover and active states for buttons */
 button:hover, .play-buton:hover, .join-room:hover, .square:hover, .leave button:hover {
     box-shadow: inset 0 0 40px rgba(51, 255, 51, 0.5); /* Glowing effect */
@@ -150,6 +156,114 @@ button:disabled, .play-buton:disabled, .join-room:disabled, .square:disabled, .l
         text-align: center;
     }
 
+.welcome-header {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: welcome-blink 10s infinite;
+}
+
+@keyframes welcome-blink {
+    0% { opacity: 1 }
+    26% { opacity: 1 }
+    32% { opacity: 0 }
+    96% { opacity: 0 }
+    100% { opacity: 1 }
+}
+
+.friends-header {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: friends-blink 10s infinite;
+}
+
+.friends-header span {
+    color: white;
+}
+
+@keyframes friends-blink {
+    0% { opacity: 0 }
+    /* transition period */
+    32% { opacity: 0 }
+    38% { opacity: 1 }
+    58% { opacity: 1 }
+    64% { opacity: 0 }
+    100% { opacity: 0 }
+}
+
+.enemies-header {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: enemies-blink 10s infinite;
+}
+
+    .enemies-header span {
+        color: red;
+    }
+
+@keyframes enemies-blink {
+    0% { opacity: 0 }
+    /* transition period*/
+    64% { opacity: 0 }
+    70% { opacity: 1 }
+    90% { opacity: 1 }
+    96% { opacity: 0 }
+    100% { opacity: 0 }
+}
+
+.waiting-for-ship-num {
+    margin: auto;
+    margin-top: 0;
+    margin-bottom: 100px;
+    white-space: nowrap;
+}
+
+.waiting-for-ship-num p {
+    font-size: 30px;
+    text-align: center;
+}
+
+.first {
+    animation: first-ellipsis 2s infinite;
+}
+
+.second {
+    animation: second-ellipsis 2s infinite;
+}
+
+.third {
+    animation: third-ellipsis 2s infinite;
+}
+
+@keyframes first-ellipsis {
+    0% { opacity: 0 }
+    24% { opacity: 0 }
+    25% { opacity: 1 }
+    99% { opacity: 1 }
+    100% { opacity: 0 }
+}
+
+@keyframes second-ellipsis {
+    0% { opacity: 0 }
+    49% { opacity: 0 }
+    50% { opacity: 1 }
+    99% { opacity: 1 }
+    100% { opacity: 0 }
+}
+
+@keyframes third-ellipsis {
+    0% { opacity: 0 }
+    74% { opacity: 0 }
+    75% { opacity: 1 }
+    99% { opacity: 1 }
+    100% { opacity: 0 }
+}
+
 /* Centering name entry box */
 .name-entry-container {
     display: flex;
@@ -207,8 +321,13 @@ button:disabled, .play-buton:disabled, .join-room:disabled, .square:disabled, .l
 }
 
 .user-board {
+    display: flex;
+    flex-direction: column;
     width: 50%;
     float: left;
+    margin-top: 30px;
+    margin-left: 40px;
+    min-width: 540px;
     transition: width 0.3s ease;
 }
 
@@ -232,9 +351,23 @@ button:disabled, .play-buton:disabled, .join-room:disabled, .square:disabled, .l
     height: 20px;
 }
 
-.opponent-board{
+.user-buttons {
+    display: flex;
+    margin-top: 15px;
+}
+
+.user-buttons button {
+    margin-left: 50px;
+}
+
+.opponent-board {
+    margin-top: 30px;
+    margin-left: 40px;
+    margin-right: 400px;
+    display: flex;
+    flex-direction: column;
     width: 30%;
-    float: right;
+    min-width: 540px;
     transition: width 0.3s ease, margin-left 0.3s ease;
 }
 
@@ -251,6 +384,14 @@ button:disabled, .play-buton:disabled, .join-room:disabled, .square:disabled, .l
 .opponent-board.enlarged .row button{
     width:70px;
     height: 70px;
+}
+
+.fire-control {
+    display: flex;
+}
+
+.fire-control button {
+    margin-left: 180px;   
 }
 
 .hit {
@@ -316,8 +457,8 @@ button:disabled, .play-buton:disabled, .join-room:disabled, .square:disabled, .l
 .sidebar {
     position: fixed;
     top: 0;
-    left: -250px; /* Initially hide the sidebar */
-    width: 250px;
+    left: -350px; /* Initially hide the sidebar */
+    width: 350px;
     height: 100%;
     background-color: #000000; /* Black background */
     color: #33FF33; /* Green text */
@@ -327,6 +468,20 @@ button:disabled, .play-buton:disabled, .join-room:disabled, .square:disabled, .l
     transition: left 0.4s ease;
     box-sizing: border-box;
     overflow-y: auto;
+}
+
+.sidebar-chat ul {
+    height: 400px;
+    border: solid 1px #33FF33;
+}
+
+.sidebar-chat ul li {
+    font-size: 15px; 
+}
+
+.sidebar-chat input {
+    width: 220px;
+    margin-top: 10px;
 }
 
 .sidebar.open {
@@ -385,7 +540,7 @@ button:disabled, .play-buton:disabled, .join-room:disabled, .square:disabled, .l
 }
 
 .sidebar.open ~ .toggle-button {
-    left: 250px;
+    left: 350px;
 }
 
 .toggle-button::before {

@@ -1037,24 +1037,32 @@
     ]
   },
   "packageFolders": {
-    "/Users/spenceraddis/.nuget/packages/": {}
+    "C:\\Users\\johnm\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/spenceraddis/Desktop/EECS 581/Battleship_p1/BlazorBattleship/BlazorBattleship.csproj",
+      "projectUniqueName": "C:\\Users\\johnm\\OneDrive\\Desktop\\Visual-Studio-Code-Projects\\Raiser's Edge Website\\backend\\Battleship\\BlazorBattleship\\BlazorBattleship.csproj",
       "projectName": "BlazorBattleship",
-      "projectPath": "/Users/spenceraddis/Desktop/EECS 581/Battleship_p1/BlazorBattleship/BlazorBattleship.csproj",
-      "packagesPath": "/Users/spenceraddis/.nuget/packages/",
-      "outputPath": "/Users/spenceraddis/Desktop/EECS 581/Battleship_p1/BlazorBattleship/obj/",
+      "projectPath": "C:\\Users\\johnm\\OneDrive\\Desktop\\Visual-Studio-Code-Projects\\Raiser's Edge Website\\backend\\Battleship\\BlazorBattleship\\BlazorBattleship.csproj",
+      "packagesPath": "C:\\Users\\johnm\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\johnm\\OneDrive\\Desktop\\Visual-Studio-Code-Projects\\Raiser's Edge Website\\backend\\Battleship\\BlazorBattleship\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "/Users/spenceraddis/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\johnm\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net6.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -1071,9 +1079,8 @@
       "restoreAuditProperties": {
         "enableAudit": "true",
         "auditLevel": "low",
-        "auditMode": "all"
-      },
-      "SdkAnalysisLevel": "9.0.100"
+        "auditMode": "direct"
+      }
     },
     "frameworks": {
       "net6.0": {
@@ -1095,20 +1102,6 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "downloadDependencies": [
-          {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[6.0.33, 6.0.33]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Host.osx-arm64",
-            "version": "[6.0.33, 6.0.33]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Ref",
-            "version": "[6.0.33, 6.0.33]"
-          }
-        ],
         "frameworkReferences": {
           "Microsoft.AspNetCore.App": {
             "privateAssets": "none"
@@ -1117,7 +1110,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.100-rc.1.24452.12/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.401\\RuntimeIdentifierGraph.json"
       }
     }
   }

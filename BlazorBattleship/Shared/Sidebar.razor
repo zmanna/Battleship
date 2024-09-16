@@ -70,7 +70,7 @@
             }
         </ul>
 
-        <input @bind="newMessage" placeholder="Type here..." 
+        <input @bind="newMessage" placeholder="Send a Message" 
                @onkeydown="@(e => { if (e.Key == "Enter") SendMessage(); })" />
 
         <button @onclick="SendMessage" disabled="@(UserName == "")">Send</button>
