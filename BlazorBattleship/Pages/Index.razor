@@ -47,6 +47,7 @@ Creation Date: September 10, 2024
                 <label>
                     Enter your name:
                 </label>
+                @* name is entered and button to play game *@
                 <input @bind="userName" placeholder="Enter Your Name..." />
                 <button class="play-buton" @onclick="(() => {
                     currentGameState = GameState.ChooseRoom;
@@ -56,6 +57,7 @@ Creation Date: September 10, 2024
         </div>
     }
 
+    <!-- game state with buttons to join different rooms (lobbies) of game -->
     @if (currentGameState == GameState.ChooseRoom)
     {
         <div class="rooms">
@@ -66,7 +68,8 @@ Creation Date: September 10, 2024
             <button class="join-room" @onclick="(() => JoinRoom(5))">@roomStatuses[4]</button>
         </div>
     }
-
+    
+    <!-- game state to pick the number of ships to play with -->
     @if (currentGameState == GameState.PickShips)
     {
         <div class="num-ships">
@@ -76,12 +79,13 @@ Creation Date: September 10, 2024
         </div>
     }
 
+    <!-- game state to wait for other player to choose ship -->
     @if (currentGameState == GameState.Waiting && shipLimit == 0)
     {
         <h1>@opponent is choosing the number of ships</h1>
     }
 
-
+    <!-- display main board -->
     @if (userName != "" && (currentGameState == GameState.Setup || currentGameState == GameState.Playing || currentGameState  == GameState.Waiting))
 {
     // display either player is to be placing ships or "your board" if ships have been placed
@@ -128,13 +132,17 @@ Creation Date: September 10, 2024
     </div>
 }
 
+<!-- display opponents board -->
 @if (player2Ready && room != 0)
 {
     <div class="opponent-board @(currentGameState == GameState.Playing ? "enlarged" : "")">
         <h3>@(opponent)'s Board</h3>
+        <!-- display column labels -->
         <div class="column-headers">
             <p /><p>1</p><p>2</p><p>3</p><p>4</p><p>5</p><p>6</p><p>7</p><p>8</p><p>9</p><p>10</p>
         </div>
+
+        <!-- set up game board for opponent as rows of buttons -->
         @for (int y = 0; y < 10; y++)
         {
             <div class="row">
@@ -143,8 +151,9 @@ Creation Date: September 10, 2024
                 {
                     int xCoord = x;//Capturing x and y coordinates so that their values at button creation are preserved.
                     int yCoord = y;
+                    // button to select coord for firing
                     <button 
-                    class="@(OpponentBoardInfo(xCoord, yCoord))" 
+                    class="@(OpponentBoardInfo(xCoord, yCoord))"
                     @onclick='(() => {
                         SetCoordinates(xCoord, yCoord);
                     })'></button>
@@ -203,30 +212,34 @@ Creation Date: September 10, 2024
     private GameState currentGameState = GameState.Initial;
     private string currentPlayer = "";
     private string opponent = "";
-    private bool isPlayer1 = false;
+    private bool isPlayer1 = false; // whether player is player1
     #endregion
     #region Ship Parameters
-    private Ship[]? ships;
+    private Ship[]? ships; // array to keep track of all ships
     private bool isShipHorizontal = true; // To manage ship placement direction
-    private int shipCount = 0;
-    private static int shipLimit;
-    private bool isTurn = false;
+    private int shipCount = 0; // number of ships
+    private static int shipLimit; // to limit how many ships are out
+    private bool isTurn = false; //keep track of players turn
     #endregion
     #endregion
 
+    // to reset game board, loop through all tiles in board
     private void ResetBoard(bool[,] board)
     {
         for (int i = 0; i < 10; i++)
         {
             for (int j = 0; j < 10; j++)
             {
+                // set tiles to false to indicate no ship or activity
                 board[i, j] = false;
             }
         }
     }
 
+    // reset the rest of the game
     private void Reset()
     {
+        // all variables are changed to their initial values for the beginning of new game
         room = 0;
         player2Ready = false;
         coordinates = (0, 0);
@@ -235,16 +248,21 @@ Creation Date: September 10, 2024
         shipCount = 0;
         shipLimit = 0;
         isTurn = false;
+
+        // reset boards
         ResetBoard(playerBoard);
         ResetBoard(previewBoard);
         ResetBoard(opponentBoard);
         ResetBoard(opponentDefaultBoard);
         ResetBoard(opponentShots);
+
+        // remove recorded moves
         while (moves.Count != 0)
         {
             moves.RemoveAt(moves.Count - 1);
         }
     }
+
 
     #region Modifier Functions
     private void SetCoordinates(int x, int y) //Sets the value of the coordinates tuple for later use
@@ -289,87 +307,99 @@ Creation Date: September 10, 2024
         }
     }
 
+    // displays a preview of the ship placement starting at the given coordinates and in the chosen orientation
     private void ShowShipPreview(int startX, int startY, bool isHorizontal)
     {
+        // ship length depending on what ships have already been placed
         int shipLength = shipCount + 1;
+
+        // horizontal ship preview
         if (isHorizontal)
         {
             for (int i = 0; i < shipLength; i++)
             {
                 if (startX + i < 10)
                 {
-                    previewBoard[startX + i, startY] = true;
+                    previewBoard[startX + i, startY] = true; // mark which cells the ship is to take
                 }
             }
         }
+        // vertical ship preview
         else
         {
             for (int i = 0; i < shipLength; i++)
             {
                 if (startY + i < 10)
                 {
-                    previewBoard[startX, startY + i] = true;
+                    previewBoard[startX, startY + i] = true; // mark which cells the ship is to take
                 }
             }
         }
     }
 
+    // hides the ship preview from the board clearing preview cells
     private void HideShipPreview(int startX, int startY, bool isHorizontal)
     {
         int shipLength = shipCount + 1;
+
+        // remove horizontal preview
         if (isHorizontal)
         {
             for (int i = 0; i < shipLength; i++)
             {
                 if (startX + i < 10)
                 {
-                    previewBoard[startX + i, startY] = false;
+                    previewBoard[startX + i, startY] = false; // toggle off preview
                 }
             }
         }
+
+        // for vertical ships
         else
         {
             for (int i = 0; i < shipLength; i++)
             {
                 if (startY + i < 10)
                 {
-                    previewBoard[startX, startY + i] = false;
+                    previewBoard[startX, startY + i] = false; // toggle off preview
                 }
             }
         }
     }
 
+    // places a ship at given coords and updates the board and ship count
     private void PlaceShip(int startX, int startY, bool isHorizontal)
     {
-        int shipLength = shipCount + 1;
-        List<(int x, int y)> coords = new List<(int x, int y)>();
+        int shipLength = shipCount + 1; // ship length determined by ship count
+        List<(int x, int y)> coords = new List<(int x, int y)>(); // list ship coords
         if (isHorizontal)
         {
-            if (startX + shipLength <= 10)
+            if (startX + shipLength <= 10) // check to make sure horizontal ship fits
             {
                 for (int i = 0; i < shipLength; i++)
                 {
-                    coords.Add((startX + i, startY));
-                    playerBoard[startX+i, startY] = true;
+                    coords.Add((startX + i, startY)); // add coords to the ships position
+                    playerBoard[startX+i, startY] = true; // add coords to board to show they are occupied
                 }
-                shipCount++;
+                shipCount++; // increase ship count
             }
         }
         else
         {
-            if (startY + shipLength <= 10)
+            if (startY + shipLength <= 10) // check to make sure vertical ship fits
             {
 
                 for (int i = 0; i < shipLength; i++)
                 {
-                    coords.Add((startX, startY+i));
-                    playerBoard[startX, startY+i] = true;
+                    coords.Add((startX, startY+i)); // add coords to the ships position
+                    playerBoard[startX, startY+i] = true; // add coords to board to show they are occupied
                 }
 
-                shipCount++;
+                shipCount++; // increase ship count
             }
         }
 
+        // create new ship one size bigger than the last
         ships[shipCount - 1] = new Ship(shipCount, shipCount, $"Ship: {shipLength}", coords);
 
         if (shipCount >= shipLimit)
@@ -380,23 +410,26 @@ Creation Date: September 10, 2024
 
     #endregion
     #region Opponent Board
+    // return the css class for the opponents board tiles based on the game state
     private string OpponentBoardInfo(int x, int y)
     {
+
         if (coordinates.HasValue && coordinates.Value.x == x && coordinates.Value.y == y && !opponentDefaultBoard[x, y])
         {
-            return "hit-preview";
+            return "hit-preview"; // display preview where the player is about to fire
         }
+
         else if (opponentDefaultBoard[x, y] && opponentBoard[x, y])
         {
-            return "hit";
+            return "hit"; // display hit was made on this tile
         }
         else if (opponentDefaultBoard[x, y] && !opponentBoard[x, y])
         {
-            return "miss";
+            return "miss"; // display miss was made on this tile
         }
         else
         {
-            return "square";
+            return "square"; // display no activity in this tile
         }
     }
     #endregion
