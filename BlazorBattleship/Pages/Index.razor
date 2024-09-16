@@ -1,19 +1,30 @@
-﻿@page "/"
+﻿@* 
+Program Name: Index
+Description: Provides functionality on the webpage for different game states
+Inputs: current game state, username, tiles selected by players, ships
+Outputs: different board states, players ships
+Other sources: Chat GPT, Reddit, StackOverflow
+Authors: John Mosley, Paul Dykes, Spencer Addis, Willem Battey, Aryamann Zutshi
+Creation Date: September 10, 2024
+*@
+
+@page "/"
 @using Microsoft.AspNetCore.SignalR.Client
 @using BlazorBattleship.Shared
 @inject NavigationManager Navigation
 @implements IAsyncDisposable
 
+<!-- display current gamestate as page title -->
 <PageTitle>@currentGameState</PageTitle>
 
-
-
+<!-- sidebar where ships are located along with button to toggle -->
 <div class="sidebar @(isSidebarOpen ? "open" : "")">
     <Sidebar Ships="ships" HubConnection="hubConnection" UserName="@userName"/>
 </div>
 
 <button class="toggle-button" @onclick="ToggleSidebar"></button>
 
+<!-- display your and opponents name at top of screen -->
 <div class="game-area @(isSidebarOpen ? "shifted" : "")">
 
     <div class="player-info">
@@ -28,7 +39,7 @@
 
     </div>
 
-
+<!-- initial game state when page is launched -->
 @if ((currentGameState == GameState.Initial) || userName == "")
     {
         <div class="name-entry-container">
@@ -73,14 +84,16 @@
 
     @if (userName != "" && (currentGameState == GameState.Setup || currentGameState == GameState.Playing || currentGameState  == GameState.Waiting))
 {
-        <div class="user-board @(currentGameState == GameState.Playing ? "minimized" : "normal")">
+    // display either player is to be placing ships or "your board" if ships have been placed
+    <div class="user-board @(currentGameState == GameState.Playing ? "minimized" : "normal")">
         <h3>@(currentGameState == GameState.Setup ? "Place your ships!" : "Your Board")</h3>
 
+        <!-- display column names -->
         <div class="column-headers">
             <p /><p>1</p><p>2</p><p>3</p><p>4</p><p>5</p><p>6</p><p>7</p><p>8</p><p>9</p><p>10</p>
         </div>
-
-        @for (int y = 0; y < 10; y++)
+        
+        @for (int y = 0; y < 10; y++)  // display board as rows of buttons (x, y) 
         {
             <div class="row">
                 <button class="letter" disabled>@letters[y]</button>
@@ -89,7 +102,7 @@
                     int xCoord = x;//Capturing the x and Y coordinates so that their values at button creation are preserved.
                     int yCoord = y;
                     <button class="@(GetCellClass(xCoord, yCoord))"
-
+                            @* actions to place ships: on click places ship and hovering previews ship placement *@
                             @onclick='(() => { if(currentGameState == GameState.Setup && (shipCount < shipLimit)) PlaceShip(xCoord, yCoord, isShipHorizontal);})'
                             @onmouseover='(() => {if(currentGameState == GameState.Setup && (shipCount < shipLimit)) ShowShipPreview(xCoord, yCoord, isShipHorizontal); })'
                             @onmouseout='(() => { if(currentGameState == GameState.Setup && (shipCount < shipLimit)) HideShipPreview(xCoord, yCoord, isShipHorizontal); })'></button>
@@ -97,15 +110,18 @@
             </div>
         }
 
+        @* button to toggle ship orientation (vertical/horizontal) *@
         <div>
             <button @onclick="ToggleShipOrientation">@((isShipHorizontal ? "Horizontal" : "Vertical") + " Placement")</button>
         </div>
 
+        @* button to start game *@
         @if (currentGameState == GameState.Setup)
         {
             <button class="square" @onclick="SendReadyMessage">Start Game</button>
         }
 
+        @* button to leave game *@
         <div class="leave">
             <button @onclick="LeaveRoom" disabled="@(room == 0)">Leave Game</button>
         </div>
