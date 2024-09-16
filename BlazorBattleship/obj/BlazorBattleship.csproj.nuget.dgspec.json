@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\johnm\\OneDrive\\Desktop\\BlazorBattleship\\Battleship\\BlazorBattleship\\BlazorBattleship.csproj": {}
+    "C:\\Users\\johnm\\OneDrive\\Desktop\\Visual-Studio-Code-Projects\\Raiser's Edge Website\\backend\\Battleship\\BlazorBattleship\\BlazorBattleship.csproj": {}
   },
   "projects": {
-    "C:\\Users\\johnm\\OneDrive\\Desktop\\BlazorBattleship\\Battleship\\BlazorBattleship\\BlazorBattleship.csproj": {
+    "C:\\Users\\johnm\\OneDrive\\Desktop\\Visual-Studio-Code-Projects\\Raiser's Edge Website\\backend\\Battleship\\BlazorBattleship\\BlazorBattleship.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\johnm\\OneDrive\\Desktop\\BlazorBattleship\\Battleship\\BlazorBattleship\\BlazorBattleship.csproj",
+        "projectUniqueName": "C:\\Users\\johnm\\OneDrive\\Desktop\\Visual-Studio-Code-Projects\\Raiser's Edge Website\\backend\\Battleship\\BlazorBattleship\\BlazorBattleship.csproj",
         "projectName": "BlazorBattleship",
-        "projectPath": "C:\\Users\\johnm\\OneDrive\\Desktop\\BlazorBattleship\\Battleship\\BlazorBattleship\\BlazorBattleship.csproj",
+        "projectPath": "C:\\Users\\johnm\\OneDrive\\Desktop\\Visual-Studio-Code-Projects\\Raiser's Edge Website\\backend\\Battleship\\BlazorBattleship\\BlazorBattleship.csproj",
         "packagesPath": "C:\\Users\\johnm\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\johnm\\OneDrive\\Desktop\\BlazorBattleship\\Battleship\\BlazorBattleship\\obj\\",
+        "outputPath": "C:\\Users\\johnm\\OneDrive\\Desktop\\Visual-Studio-Code-Projects\\Raiser's Edge Website\\backend\\Battleship\\BlazorBattleship\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

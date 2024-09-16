@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "R0aQ6XSSA5k=",
+  "dgSpecHash": "o2ysUpHQj6U=",
   "success": true,
-  "projectFilePath": "C:\\Users\\johnm\\OneDrive\\Desktop\\BlazorBattleship\\Battleship\\BlazorBattleship\\BlazorBattleship.csproj",
+  "projectFilePath": "C:\\Users\\johnm\\OneDrive\\Desktop\\Visual-Studio-Code-Projects\\Raiser's Edge Website\\backend\\Battleship\\BlazorBattleship\\BlazorBattleship.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\johnm\\.nuget\\packages\\microsoft.aspnetcore.connections.abstractions\\8.0.8\\microsoft.aspnetcore.connections.abstractions.8.0.8.nupkg.sha512",
     "C:\\Users\\johnm\\.nuget\\packages\\microsoft.aspnetcore.http.connections.client\\8.0.8\\microsoft.aspnetcore.http.connections.client.8.0.8.nupkg.sha512",

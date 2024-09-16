@@ -1,56 +1,120 @@
-﻿@page "/"
+﻿@* 
+Program Name: Index
+Description: Provides functionality on the webpage for different game states
+Inputs: current game state, username, tiles selected by players, ships
+Outputs: different board states, players ships
+Other sources: Chat GPT, Reddit, StackOverflow
+Authors: John Mosley, Paul Dykes, Spencer Addis, Willem Battey, Aryamann Zutshi
+Creation Date: September 10, 2024
+*@
+
+@page "/"
 @using Microsoft.AspNetCore.SignalR.Client
+@using BlazorBattleship.Shared
 @inject NavigationManager Navigation
 @implements IAsyncDisposable
 
-<PageTitle>Battleship</PageTitle>
+<!-- display current gamestate as page title -->
+<PageTitle>@currentGameState</PageTitle>
 
-@if ((currentGameState == GameState.Initial) || userInput == "")
-{
-    <div class="form-group">
-        <label>
-            Enter your name:
-            <input @bind="userInput" />
-        </label>
-        <button class="play-buton" @onclick="(() => {currentGameState = GameState.ChooseRoom;})">Play</button>
+<!-- sidebar where ships are located along with button to toggle -->
+<div class="sidebar @(isSidebarOpen ? "open" : "")">
+    <Sidebar Ships="ships" HubConnection="hubConnection" UserName="@userName"/>
+</div>
+
+<button class="toggle-button" @onclick="ToggleSidebar"></button>
+
+<!-- display your and opponents name at top of screen -->
+<div class="game-area @(isSidebarOpen ? "shifted" : "")">
+    <div class="leave">
+        <button @onclick="LeaveRoom" hidden="@(room == 0)">Leave Game</button>
     </div>
-}
 
-@if (currentGameState == GameState.ChooseRoom)
-{
-    <div class="rooms">
-        <button class="join-room" @onclick="(() => JoinRoom(1))">@roomStatuses[0]</button>
-        <button class="join-room" @onclick="(() => JoinRoom(2))">@roomStatuses[1]</button>
-        <button class="join-room" @onclick="(() => JoinRoom(3))">@roomStatuses[2]</button>
-        <button class="join-room" @onclick="(() => JoinRoom(4))">@roomStatuses[3]</button>
-        <button class="join-room" @onclick="(() => JoinRoom(5))">@roomStatuses[4]</button>
+    <div class="player-info">
+
+        <div class="player-name">
+            <h3>Your Name: @userName</h3>
+        </div>
+
+        <div class="opponent-name">
+            <h3>Opponent: @opponent</h3>
+        </div>
+
     </div>
-}
 
-@if (currentGameState == GameState.PickShips)
-{
-    <div class="num-ships">
-        <label>Enter number of ships:</label>
-        <input @bind="shipLimit" />
-        <button @onclick="SendShipNum">Enter</button>
-    </div>
-}
+<!-- initial game state when page is launched -->
+@if ((currentGameState == GameState.Initial || userName == "") && room == 0)
+    {
+        <div class="name-entry-container">
+            <div class="welcome-header">
+                <h2>Welcome to Battleship</h2>
+            </div>
+            <div class="friends-header">
+                <h2><span>Play</span> with Your Friends</h2>
+            </div>
+            <div class="enemies-header">
+                <h2><span>Destroy</span> Your Enemies</h2>
+            </div>
+            <div class="name-entry-box">
+                <label>
+                    Enter your name:
+                </label>
+                <input @bind="userName" placeholder="Enter Your Name..." />
+                <button class="play-buton" @onclick="(() => {
+                    currentGameState = GameState.ChooseRoom;
+                    InvokeAsync(StateHasChanged);
+                })">Play</button>
+            </div>
+        </div>
+    }
 
-@if (currentGameState == GameState.Waiting && shipLimit == 0)
-{
-    <h1>@opponent is choosing the number of ships</h1>
-}
+    @if (currentGameState == GameState.ChooseRoom)
+    {
+        <div class="rooms">
+            <button class="join-room" @onclick="(() => JoinRoom(1))">@roomStatuses[0]</button>
+            <button class="join-room" @onclick="(() => JoinRoom(2))">@roomStatuses[1]</button>
+            <button class="join-room" @onclick="(() => JoinRoom(3))">@roomStatuses[2]</button>
+            <button class="join-room" @onclick="(() => JoinRoom(4))">@roomStatuses[3]</button>
+            <button class="join-room" @onclick="(() => JoinRoom(5))">@roomStatuses[4]</button>
+        </div>
+    }
 
-@if (userInput != "" && (currentGameState == GameState.Setup || currentGameState == GameState.Playing))
+    @if (currentGameState == GameState.InLobby)
+    {
+        <div class="waiting-for-opponent">
+            <h1>Waiting for Opponent to Join<span class="first">.</span><span class="second">.</span><span class="third">.</span></h1>
+        </div>
+    }
+
+    @if (currentGameState == GameState.PickShips)
+    {
+        <div class="num-ships">
+            <label>Enter number of ships:</label>
+            <input @bind="shipLimit" />
+            <button @onclick="SendShipNum">Enter</button>
+        </div>
+    }
+
+    @if (currentGameState == GameState.Waiting && shipLimit == 0)
+    {
+        <div class="waiting-for-ship-num">
+            <p>@opponent is choosing the number of ships<span class="first">.</span><span class="second">.</span><span class="third">.</span></p>
+        </div>
+    }
+
+
+    @if (userName != "" && (currentGameState == GameState.Setup || currentGameState == GameState.Playing || currentGameState  == GameState.Waiting))
 {
-    <div class="user-board">
+    // display either player is to be placing ships or "your board" if ships have been placed
+        <div class="user-board @(currentGameState == GameState.Playing ? "minimized" : "normal")" hidden="@(currentGameState != GameState.Setup && currentGameState != GameState.Playing)">
         <h3>@(currentGameState == GameState.Setup ? "Place your ships!" : "Your Board")</h3>
 
+        <!-- display column names -->
         <div class="column-headers">
             <p /><p>1</p><p>2</p><p>3</p><p>4</p><p>5</p><p>6</p><p>7</p><p>8</p><p>9</p><p>10</p>
         </div>
-
-        @for (int y = 0; y < 10; y++)
+        
+        @for (int y = 0; y < 10; y++)  // display board as rows of buttons (x, y) 
         {
             <div class="row">
                 <button class="letter" disabled>@letters[y]</button>
@@ -59,7 +123,6 @@
                     int xCoord = x;//Capturing the x and Y coordinates so that their values at button creation are preserved.
                     int yCoord = y;
                     <button class="@(GetCellClass(xCoord, yCoord))"
-
                             @onclick='(() => { if(currentGameState == GameState.Setup && (shipCount < shipLimit)) PlaceShip(xCoord, yCoord, isShipHorizontal);})'
                             @onmouseover='(() => {if(currentGameState == GameState.Setup && (shipCount < shipLimit)) ShowShipPreview(xCoord, yCoord, isShipHorizontal); })'
                             @onmouseout='(() => { if(currentGameState == GameState.Setup && (shipCount < shipLimit)) HideShipPreview(xCoord, yCoord, isShipHorizontal); })'></button>
@@ -67,44 +130,47 @@
             </div>
         }
 
-        <div>
-            <button @onclick="ToggleShipOrientation">@((isShipHorizontal ? "Horizontal" : "Vertical") + " Placement")</button>
-        </div>
+        @* button to toggle ship orientation (vertical/horizontal) *@
+        <div class="user-buttons">
+            <div>
+                <button @onclick="ToggleShipOrientation">@((isShipHorizontal ? "Horizontal" : "Vertical") + " Placement")</button>
+            </div>
 
-        @if (currentGameState == GameState.Setup)
-        {
-            <button class="square" @onclick="SendReadyMessage">Start Game</button>
-        }
+            @* button to start game *@
+            @if (currentGameState == GameState.Setup)
+            {
+                <button class="square" @onclick="SendReadyMessage">Start Game</button>
+            }
 
-        <div class="leave">
-            <button @onclick="LeaveRoom" disabled="@(room == 0)">Leave Game</button>
+            @* button to leave game *@
         </div>
     </div>
 }
 
 @if (player2Ready && room != 0)
 {
-    <div class="player-boards">
-        <div class="opponent-board">
-            <h3>@(opponent)'s Board</h3>
-            <div class="column-headers">
-                <p /><p>1</p><p>2</p><p>3</p><p>4</p><p>5</p><p>6</p><p>7</p><p>8</p><p>9</p><p>10</p>
-            </div>
-            @for (int y = 0; y < 10; y++)
-            {
-                <div class="row">
-                    <button class="letter" disabled>@letters[y]</button>
-                    @for (int x = 0; x < 10; x++)
-                    {
-                        int xCoord = x;//Capturing x and y coordinates so that their values at button creation are preserved.
-                        int yCoord = y;
-                        <button class="@(OpponentBoardInfo(xCoord, yCoord))" @onclick='(() => {
-                            SetCoordinates(xCoord, yCoord);
-                        })'></button>
-                    }
-                </div>
-            }
+    <div class="opponent-board @(currentGameState == GameState.Playing ? "enlarged" : "")">
+        <h3>@(opponent)'s Board</h3>
+        <div class="column-headers">
+            <p /><p>1</p><p>2</p><p>3</p><p>4</p><p>5</p><p>6</p><p>7</p><p>8</p><p>9</p><p>10</p>
         </div>
+        @for (int y = 0; y < 10; y++)
+        {
+            <div class="row">
+                <button class="letter" disabled>@letters[y]</button>
+                @for (int x = 0; x < 10; x++)
+                {
+                    int xCoord = x;//Capturing x and y coordinates so that their values at button creation are preserved.
+                    int yCoord = y;
+                    <button 
+                    class="@(OpponentBoardInfo(xCoord, yCoord))" 
+                    @onclick='(() => {
+                        SetCoordinates(xCoord, yCoord);
+                    })'></button>
+                }
+            </div>
+        }
+    </div>
 
         <!-- Display selected coordinates in a text box -->
         <div class="fire-control">
@@ -120,12 +186,14 @@
                 <li>@move</li>
             }
         </ul>
-    </div>
 }
-
+</div>
 
 @code {
     #region Declarations
+    #region Page Status
+    private bool isSidebarOpen = false;
+    #endregion
     #region Connection Information
     private HubConnection? hubConnection;
     public bool IsConnected => hubConnection?.State == HubConnectionState.Connected;
@@ -135,7 +203,7 @@
     #endregion
     #region Player Information
     private List<string> moves = new List<string>();
-    private string userInput = "";
+    private string userName = "";
     private (int x, int y)? coordinates = (0, 0);
     #endregion
     #region Boards
@@ -150,16 +218,17 @@
     private bool[,] opponentDefaultBoard = new bool[10, 10]; // A default state for the opponents board when neither hit nor miss is recorded
     #endregion
     #region Game State Info
-    private enum GameState { Initial, ChooseRoom, PickShips, Setup, Playing, Waiting, GameOver }
+    private enum GameState { Initial, ChooseRoom, PickShips, Setup, Playing, Waiting, GameOver, InLobby }
     private GameState currentGameState = GameState.Initial;
     private string currentPlayer = "";
     private string opponent = "";
     private bool isPlayer1 = false;
     #endregion
     #region Ship Parameters
+    private Ship[]? ships;
     private bool isShipHorizontal = true; // To manage ship placement direction
     private int shipCount = 0;
-    private int shipLimit = 0;
+    private static int shipLimit;
     private bool isTurn = false;
     #endregion
     #endregion
@@ -183,7 +252,7 @@
         opponent = "";
         isShipHorizontal = true;
         shipCount = 0;
-        shipLimit = 3;
+        shipLimit = 0;
         isTurn = false;
         ResetBoard(playerBoard);
         ResetBoard(previewBoard);
@@ -204,6 +273,10 @@
     private void ToggleShipOrientation() //Toggle ship orientation boolean to track whether or not a placed ship is vertical or horizontal
     {
         isShipHorizontal = !isShipHorizontal;
+    }
+    private void ToggleSidebar()
+    {
+        isSidebarOpen = !isSidebarOpen; //Toggles sidebar visibility
     }
 
     #region Board Modification
@@ -288,14 +361,15 @@
     private void PlaceShip(int startX, int startY, bool isHorizontal)
     {
         int shipLength = shipCount + 1;
+        List<(int x, int y)> coords = new List<(int x, int y)>();
         if (isHorizontal)
         {
             if (startX + shipLength <= 10)
             {
                 for (int i = 0; i < shipLength; i++)
                 {
-                    playerBoard[startX + i, startY] = true;
-                    shipHPs[startX + i, startY] = shipLength;
+                    coords.Add((startX + i, startY));
+                    playerBoard[startX+i, startY] = true;
                 }
                 shipCount++;
             }
@@ -304,13 +378,19 @@
         {
             if (startY + shipLength <= 10)
             {
+
                 for (int i = 0; i < shipLength; i++)
                 {
-                    playerBoard[startX, startY + i] = true;
+                    coords.Add((startX, startY+i));
+                    playerBoard[startX, startY+i] = true;
                 }
+
                 shipCount++;
             }
         }
+
+        ships[shipCount - 1] = new Ship(shipCount, shipCount, $"Ship: {shipLength}", coords);
+
         if (shipCount >= shipLimit)
         {
             //currentGameState = GameState.Playing;
@@ -321,7 +401,11 @@
     #region Opponent Board
     private string OpponentBoardInfo(int x, int y)
     {
-        if (opponentDefaultBoard[x, y] && opponentBoard[x, y])
+        if (coordinates.HasValue && coordinates.Value.x == x && coordinates.Value.y == y && !opponentDefaultBoard[x, y])
+        {
+            return "hit-preview";
+        }
+        else if (opponentDefaultBoard[x, y] && opponentBoard[x, y])
         {
             return "hit";
         }
@@ -361,7 +445,6 @@
         {
             for (int i = 0; i < 5; i++)
             {
-                //System.Diagnostics.Debug.WriteLine(playersInRooms[i - 1].Count);
                 if (playersInRooms[i].Count == 0)
                 {
                     roomStatuses[i] = $"Room {i + 1} is empty";
@@ -370,9 +453,9 @@
                 {
                     roomStatuses[i] = $"{playersInRooms[i][0]} is waiting";
                 }
-                if (playersInRooms[i].Count == 2 && playersInRooms[i].Contains(userInput))
+                if (playersInRooms[i].Count == 2 && playersInRooms[i].Contains(userName))
                 {
-                    if (playersInRooms[i][0] == userInput)
+                    if (playersInRooms[i][0] == userName)
                     {
                         isPlayer1 = true;
                         isTurn = true;
@@ -395,9 +478,17 @@
             InvokeAsync(StateHasChanged);
         });
 
+        hubConnection.On<string>("PlayerLeft", (user) =>
+        {
+            moves.Add($"{user} has left the room.");
+            currentGameState = GameState.InLobby; // Or return to the lobby
+            InvokeAsync(StateHasChanged);
+        });
+
         hubConnection.On<int>("ReceiveShipNum", (sl) =>
         {
             shipLimit = sl;
+            ships = new Ship[shipLimit];
             currentGameState = GameState.Setup;
             InvokeAsync(StateHasChanged);
         });
@@ -414,9 +505,41 @@
         hubConnection.On<string, int, int>("ReceiveCoordinates", (user, x, y) =>
         {
             opponentShots[x, y] = true;
-            hubConnection.SendAsync("SendHitMiss", room, playerBoard[x, y], shipHPs[x, y]);
-            var formattedMessage = $"{user} fires at {x} , {y}";
-            moves.Add(formattedMessage);
+            currentGameState = GameState.Playing;
+            Ship? hitShip = null;
+
+            if (ships is not null)
+            {
+                foreach (var ship in ships)
+                {
+
+                    if (ship is not null && ship.IsHit(x, y))
+                    {
+                        hitShip = ship;
+                        break;
+                    }
+                }
+            }
+
+            if (hitShip != null)
+            {
+                hitShip.DeductHP();
+
+                if (hitShip.IsDestroyed())
+                {
+                    var shipDestructionMessage = $"{hitShip.name} is destroyed!";
+                    moves.Add(shipDestructionMessage);
+                }
+                else
+                {
+                    var shipHitMessage = $"Hit on {hitShip.name}! {hitShip.name} has {hitShip.hp} hit points left.";
+                    moves.Add(shipHitMessage);
+                }
+            }
+
+            hubConnection.SendAsync("SendHitMiss", room, playerBoard[x, y]);
+            var shotMessage = $"{user} fires at {x} , {y}";
+            moves.Add(shotMessage);
             isTurn = true;
             InvokeAsync(StateHasChanged);
         });
@@ -425,7 +548,7 @@
         {
             string message;
 
-            if (coordinates is not null)
+            if (coordinates.HasValue)
             {
                 if (wasHit)
                 {
@@ -455,7 +578,8 @@
         if (hubConnection is not null)
         {
             room = roomNum;
-            await hubConnection.SendAsync("JoinRoom", userInput, roomNum);
+            currentGameState = GameState.InLobby;
+            await hubConnection.SendAsync("JoinRoom", userName, roomNum);
         }
     }
 
@@ -463,8 +587,16 @@
     {
         if (hubConnection is not null)
         {
-            await hubConnection.SendAsync("LeaveRoom", userInput, room);
-            currentGameState = GameState.ChooseRoom;
+            await hubConnection.SendAsync("LeaveRoom", userName, room);
+
+            // Reset game state and room information locally
+            currentGameState = GameState.ChooseRoom; // Return to room selection screen
+            Reset(); // Clear game state (boards, ships, etc.)
+
+            room = 0; // Reset room number
+            isTurn = false; // Reset turn state
+            player2Ready = false; // Reset opponent readiness
+            opponent = ""; // Clear opponent name
         }
     }
 
@@ -472,6 +604,7 @@
     {
         if (hubConnection is not null)
         {
+            ships = new Ship[shipLimit];
             await hubConnection.SendAsync("SendShipNum", room, shipLimit);
         }
     }
@@ -489,10 +622,10 @@
     {
         if (hubConnection is not null && coordinates.HasValue)
         {
-            await hubConnection.SendAsync("SendCoordinates", userInput, room, coordinates.Value.x, coordinates.Value.y);
-            currentGameState = GameState.Playing;
+            await hubConnection.SendAsync("SendCoordinates", userName, room, coordinates.Value.x, coordinates.Value.y);
+            currentGameState = GameState.Waiting;
             isTurn = false;
-            //StateHasChanged();
+            await InvokeAsync(StateHasChanged);
         }
     }
 
