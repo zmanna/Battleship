@@ -70,7 +70,7 @@
 
 @if (userName != "" && (currentGameState == GameState.Setup || currentGameState == GameState.Playing))
 {
-        <div class="user-board @(currentGameState == GameState.Playing ? "minimized" : "")">
+        <div class="user-board @(currentGameState == GameState.Playing ? "minimized" : "normal")">
         <h3>@(currentGameState == GameState.Setup ? "Place your ships!" : "Your Board")</h3>
 
         <div class="column-headers">
@@ -180,7 +180,7 @@
     private bool[,] opponentDefaultBoard = new bool[10, 10]; // A default state for the opponents board when neither hit nor miss is recorded
     #endregion
     #region Game State Info
-    private enum GameState { Initial, ChooseRoom, PickShips, Setup, Playing, Waiting, GameOver }
+    private enum GameState { Initial, ChooseRoom, PickShips, Setup, Playing, Waiting, GameOver, InLobby }
     private GameState currentGameState = GameState.Initial;
     private string currentPlayer = "";
     private string opponent = "";
@@ -537,6 +537,7 @@
         if (hubConnection is not null)
         {
             room = roomNum;
+            currentGameState = GameState.InLobby;
             await hubConnection.SendAsync("JoinRoom", userName, roomNum);
         }
     }
